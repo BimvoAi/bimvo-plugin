@@ -12,9 +12,10 @@ O que cada abertura vende está em `specs/011-checkout-no-picker/contracts/check
 `src/app.tsx` monta, para `kind: 'checkout'`:
 
 - `/`: o checkout (`<Checkout config={config} />`) com dados do comprador, entrega e frete quando
-  há produto físico, cupom, order bump, PIX, cartão (o kit gera o token e abre sozinho a
-  confirmação do banco, o 3DS, quando a loja usa), acompanhamento, nova tentativa e upsell; eventos do funil saem sozinhos;
-- `/pedido/<orderId>#t=<orderToken>`: o acompanhamento do pedido (estado e PIX). O
+  há produto físico, cupom, order bump, PIX, cartão (o kit gera o token no adquirente e, na
+  Cloudfy Payments com 3DS, abre sozinho a confirmação do banco), boleto, acompanhamento, nova
+  tentativa e upsell; eventos do funil saem sozinhos;
+- `/pedido/<orderId>#t=<orderToken>`: o acompanhamento do pedido (estado, PIX ou boleto). O
   checkout mostra o link "Acompanhar pedido" depois de gerar o pedido;
 - qualquer outro caminho volta para `/`, mantendo a query.
 
@@ -49,8 +50,9 @@ link por produto ativo quando ela não escolheu. Não entregue o endereço nu. C
 substituiria.
 
 Produto digital não pede endereço de entrega. O endereço de cobrança só aparece quando o meio
-escolhido exige (`requiresAddress`, que a API calcula; hoje, o cartão, que a confirmação do banco
-autentica com esse endereço). Produto físico pede endereço de entrega e frete.
+escolhido exige (`requiresAddress`, que a API calcula): Cloudfy Payments no cartão (a confirmação
+do banco autentica com esse endereço); Pagar.me no cartão, no boleto e no PIX de conta PSP;
+Mercado Pago só no boleto. Produto físico pede endereço de entrega e frete.
 
 ## O que personalizar
 

@@ -2,7 +2,7 @@
 
 Skills que ensinam um assistente de IA (Claude Code, Codex, Gemini CLI, Cursor, VS Code/Copilot,
 OpenCode, Claude Desktop) a operar a BimvoAI pelas ferramentas MCP. Com elas instaladas, o usuário
-faz tudo conversando: cria a loja, configura PIX e cartão, cadastra produtos, configura frete, cupons
+faz tudo conversando: cria a loja, conecta o adquirente e configura PIX, cartão e boleto, cadastra produtos, configura frete, cupons
 e ofertas, publica a página da loja (página de checkout ou loja virtual, conforme o tipo da loja)
 e acompanha pedidos e métricas.
 
@@ -17,7 +17,7 @@ e funcionam em qualquer assistente que o suporte.
 | `criar-checkout` | Gera a página de checkout da loja `checkout` (o comprador chega pelo link do produto e paga), headless, publica no domínio do lojista e cuida das versões | **disponível** (features 002, 009 e 026) |
 | `criar-loja-virtual` | Gera a loja virtual completa da loja `ecommerce` (início, busca, categorias, produto, carrinho, checkout, pedido e políticas), headless, publica no domínio do lojista e cuida das versões | **disponível** (features 006, 009 e 026) |
 | `configurar-loja` | Cria e ajusta lojas, tipo, moedas, fuso, identificação do vendedor e políticas | **disponível** |
-| `configurar-pagamentos` | Mostra se os Recebimentos estão ativos e configura PIX e cartão (parcelas, juros, desconto e 3DS) | **disponível** |
+| `configurar-pagamentos` | Mostra os Recebimentos (Cloudfy Payments), conecta adquirentes (Mercado Pago, Pagar.me) e configura PIX, cartão, boleto, parcelas, juros, desconto e 3DS | **disponível** |
 | `gerenciar-produtos` | Catálogo com preço por moeda, físico ou digital | **disponível** |
 | `configurar-frete` | Métodos de envio por país, estado e CEP, frete grátis | **disponível** |
 | `gerenciar-cupons` | Cupons percentuais, fixos e de frete grátis | **disponível** |

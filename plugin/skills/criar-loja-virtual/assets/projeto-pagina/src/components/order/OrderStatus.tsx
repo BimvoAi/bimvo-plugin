@@ -24,10 +24,9 @@ const PENDING = new Set<OrderView['status']>([
 ]);
 
 /**
- * Acompanhamento do pedido pelo link `/pedido/<orderId>#t=<orderToken>`: estado, PIX (ou o
- * boleto de um pedido antigo) enquanto aguarda, atualizado a cada 4 s. Upsell e nova tentativa
- * ficam no checkout: "tentar de novo" abre o checkout da sessão, que paga de novo o mesmo pedido
- * (`payAgainHref`).
+ * Acompanhamento do pedido pelo link `/pedido/<orderId>#t=<orderToken>`: estado, PIX ou boleto
+ * enquanto aguarda, atualizado a cada 4 s. Upsell e nova tentativa ficam no checkout: "tentar de
+ * novo" abre o checkout da sessão, que paga de novo o mesmo pedido (`payAgainHref`).
  */
 export function OrderStatus({
   config,

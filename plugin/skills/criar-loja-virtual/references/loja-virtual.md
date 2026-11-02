@@ -26,7 +26,7 @@ Com `kind: 'ecommerce'`, `src/app.tsx` monta `<StoreApp config={config} />`
 | `/categoria/<slug>` | Produtos da categoria |
 | `/produto/<slug ou id>` | Imagens, descrição, preço, preço riscado, variantes, disponibilidade e quantidade |
 | `/carrinho` | Carrinho guardado no navegador e conferido na API a cada abertura |
-| `/checkout` | Checkout do carrinho (frete, cupom, order bump, PIX, cartão, upsell) |
+| `/checkout` | Checkout do carrinho (frete, cupom, order bump, PIX, cartão, boleto, upsell) |
 | `/pedido/<id>#t=<token>` | Acompanhamento do pedido |
 | `/politicas/trocas` e `/politicas/privacidade` | Políticas da loja |
 

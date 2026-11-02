@@ -1,6 +1,6 @@
 {
   "name": "bimvo",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Skills e servidor MCP da BimvoAI: crie lojas, configure pagamentos, produtos, frete, cupons e ofertas, publique páginas e acompanhe pedidos e métricas pelo assistente.",
   "author": {
     "name": "BimvoAI"

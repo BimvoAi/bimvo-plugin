@@ -1,12 +1,12 @@
 ---
 name: configurar-loja
-description: Cria, lista e ajusta lojas na BimvoAI - nome, tipo (checkout ou ecommerce), identificação do vendedor e políticas da loja virtual, idiomas, moedas aceitas, moeda padrão e fuso horário - pixels de anúncio (Meta, Google, TikTok, Kwai), e mostra o que cada loja tem (páginas, produtos, meios de pagamento, se está pronta para vender). Use quando o usuário disser /configurar-loja, "cria uma loja", "minhas lojas", "renomeia a loja", "quero vender em dólar/euro", "muda o fuso da loja", "qual loja está pronta", "loja em inglês", "loja virtual", "CNPJ da loja", "política de troca", "política de privacidade", "pixel da Meta", "pixel do TikTok", "tag do Google", "pausar pixel", "pixel por produto".
+description: Cria, lista e ajusta lojas na BimvoAI - nome, tipo (checkout ou ecommerce), identificação do vendedor e políticas da loja virtual, idiomas, moedas aceitas, moeda padrão e fuso horário - pixels de anúncio (Meta, Google, TikTok, Kwai), e mostra o que cada loja tem (páginas, produtos, adquirentes, meios de pagamento, se está pronta para vender). Use quando o usuário disser /configurar-loja, "cria uma loja", "minhas lojas", "renomeia a loja", "quero vender em dólar/euro", "muda o fuso da loja", "qual loja está pronta", "loja em inglês", "loja virtual", "CNPJ da loja", "política de troca", "política de privacidade", "pixel da Meta", "pixel do TikTok", "tag do Google", "pausar pixel", "pixel por produto".
 ---
 
 # Lojas na BimvoAI
 
 Cada conta pode ter até 20 lojas; a conta já nasce com uma loja padrão. Toda página, produto,
-regra de pagamento, cupom, oferta, frete, pedido e métrica pertence a uma loja, e nada
+adquirente, regra de pagamento, cupom, oferta, frete, pedido e métrica pertence a uma loja, e nada
 é herdado entre lojas.
 
 ## Regras
@@ -26,9 +26,9 @@ regra de pagamento, cupom, oferta, frete, pedido e métrica pertence a uma loja,
 ## Listar
 
 `big_bang_list_stores`. Mostre uma tabela curta: nome, tipo (`checkout` ou `ecommerce`), idioma
-padrão, idiomas habilitados, padrão (sim/não), pronta para vender, meios ativos,
-moedas, produtos ativos, páginas. Destaque o que impede de vender (Recebimentos ainda não ativos,
-nenhum meio ligado, produtos sem preço numa moeda aceita) e, na loja `ecommerce`, o que falta em `missingLegal` para
+padrão, idiomas habilitados, padrão (sim/não), pronta para vender, adquirentes, meios ativos,
+moedas, produtos ativos, páginas. Destaque o que impede de vender (sem Recebimentos ativos nem
+adquirente conectado, moeda sem meio, produtos sem preço numa moeda aceita) e, na loja `ecommerce`, o que falta em `missingLegal` para
 publicar a loja virtual.
 
 ## Criar
@@ -38,7 +38,7 @@ Pergunte o nome (2 a 80 caracteres) se não foi dito. O tipo decide a única pá
 catálogo, carrinho e checkout. Use `ecommerce` quando o lojista quiser uma loja com vários
 produtos para o comprador navegar. Moeda padrão é BRL e idioma padrão
 é `pt-BR`; só pergunte se o usuário falou em vender fora do Brasil ou em outro idioma. Chame
-`big_bang_create_store`. Em seguida ofereça configurar PIX e cartão (skill `configurar-pagamentos`).
+`big_bang_create_store`. Em seguida ofereça configurar os recebimentos e os meios de pagamento (skill `configurar-pagamentos`).
 
 ## Ajustar
 
@@ -77,8 +77,9 @@ produtos para o comprador navegar. Moeda padrão é BRL e idioma padrão
   - Para virar padrão, a moeda precisa ter preço em todos os produtos ativos
     (`MISSING_PRICES_FOR_CURRENCY`): ofereça preencher os preços com `gerenciar-produtos`.
   - A BimvoAI não converte câmbio: cada produto, frete e oferta precisa de preço em cada moeda.
-  - Os pagamentos (PIX e cartão) cobram só em BRL: outra moeda ainda não tem meio de pagamento.
-    Diga isso se o usuário quiser vender em outra moeda.
+  - Para cobrar na moeda nova, algum adquirente da loja precisa cobrar nela (a Cloudfy Payments
+    só cobra em BRL). PIX e boleto só cobram em BRL. Depois de adicionar, confira com
+    `big_bang_get_payment_settings`.
 
 ## Pixels de anúncio
 
@@ -139,7 +140,7 @@ instalar com o modo, salvar o token, testar, pausar e remover.
 
 ## Recuperação por SMS
 
-A loja pode mandar SMS de PIX pendente, checkout abandonado e cartão recusado.
+A loja pode mandar SMS de PIX pendente, boleto, checkout abandonado e cartão recusado.
 O texto do SMS é fixo, o mesmo para todas as lojas: começa com o nome da loja, traz o link e o rodapé de opt-out. Nem o lojista nem você editam a mensagem; se pedirem outro texto, explique que não é possível. O telefone do comprador só aparece mascarado.
 
 - `big_bang_get_sms_recovery_settings` mostra fluxos, saldo, preço por segmento e se o débito está ligado.

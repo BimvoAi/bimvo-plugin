@@ -6,6 +6,7 @@ description: Mostra o lucro real da loja (não o faturamento nem o ROAS) por per
 # Copiloto de lucro
 
 O lucro real é o que sobrou: faturamento pago menos custo do produto, tarifa do recebimento,
+taxa de checkout da BimvoAI (só em venda por adquirente próprio; na Cloudfy Payments é zero),
 frete, imposto estimado, anúncio, reembolso e contestação. Quem calcula é o servidor, com regra
 fixa. Você explica e, se o lojista confirmar, chama a ferramenta de ação. Você não inventa número
 e o servidor não decide sozinho.

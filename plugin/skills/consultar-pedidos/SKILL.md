@@ -11,8 +11,9 @@ description: Lista e abre pedidos de uma loja da BimvoAI - filtra por situação
   ele.
 - Dados do comprador são pessoais: mostre só o necessário para o que o usuário pediu, e não os
   copie para fora da conversa sem ele pedir.
-- A BimvoAI não reembolsa nem cancela pedidos: o estorno é feito no painel de Recebimentos, e o
-  pedido é atualizado sozinho quando o pagamento muda. Diga isso se o usuário pedir.
+- A BimvoAI não reembolsa nem cancela pedidos: o estorno é feito no painel de Recebimentos
+  (Cloudfy Payments) ou no painel do adquirente (Mercado Pago, Pagar.me), e o pedido é atualizado
+  sozinho quando o pagamento muda. Diga isso se o usuário pedir.
 - Se as ferramentas citadas não existirem no servidor, diga que pedidos ainda não estão liberados.
 
 ## Listar

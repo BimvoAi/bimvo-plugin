@@ -1,6 +1,6 @@
 {
   "name": "bimvo",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Skills e servidor MCP da BimvoAI: crie lojas, configure pagamentos, produtos, frete, cupons e ofertas, publique páginas e acompanhe pedidos e métricas pelo assistente.",
   "author": {
     "name": "BimvoAI"
@@ -17,7 +17,7 @@
   "interface": {
     "displayName": "BimvoAI",
     "shortDescription": "Opere sua loja BimvoAI pelo assistente",
-    "longDescription": "Crie lojas, configure PIX e cartão, cadastre produtos, frete, cupons e ofertas, publique a página de checkout ou a loja virtual e acompanhe pedidos e métricas conversando com o assistente.",
+    "longDescription": "Crie lojas, conecte o adquirente, configure PIX, cartão e boleto, cadastre produtos, frete, cupons e ofertas, publique a página de checkout ou a loja virtual e acompanhe pedidos e métricas conversando com o assistente.",
     "developerName": "BimvoAI",
     "category": "Productivity",
     "capabilities": [

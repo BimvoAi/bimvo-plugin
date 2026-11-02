@@ -22,8 +22,8 @@ import { useProductChoice } from './useProductChoice';
 /**
  * Checkout completo ligado à API do big-bang: dados do comprador (com máscara e validação),
  * endereço de entrega só com produto físico e endereço de cobrança só no meio que exige,
- * cupom, order bump, PIX, cartão (token no processador e 3DS do banco, abertos pelo kit),
- * acompanhamento do pagamento, nova tentativa e upsell. Eventos do funil vão sozinhos.
+ * cupom, order bump, PIX, cartão (token no adquirente e, na Cloudfy Payments, 3DS do banco,
+ * abertos pelo kit), boleto, acompanhamento do pagamento, nova tentativa e upsell. Eventos do funil vão sozinhos.
  * Toda regra vem do kit (`useCheckoutForm`); este arquivo só desenha. Mudar o visual é seguro;
  * reescrever a regra aqui congela a página e ela deixa de receber correções.
  */
@@ -155,7 +155,14 @@ function CheckoutForm({
               </p>
             )}
             {form.upsell.needsCard && card.tokenizer && (
-              <CardFields field={card.field} errors={card.errors} t={t} />
+              <CardFields
+                tokenizer={card.tokenizer}
+                field={card.field}
+                errors={card.errors}
+                t={t}
+                onSecureChange={card.onSecureChange}
+                onFilled={() => undefined}
+              />
             )}
             {c.error && <Alert>{c.error}</Alert>}
             <KitSlot
@@ -351,7 +358,7 @@ function CheckoutForm({
             )}
 
             <Section title={t('section.payment')}>
-              <div role="radiogroup" class="grid grid-cols-2 gap-2">
+              <div role="radiogroup" class="grid grid-cols-3 gap-2">
                 {payment.methods.map((m) => (
                   <button
                     key={m.method}
@@ -382,7 +389,14 @@ function CheckoutForm({
 
               {method === 'credit_card' && card.tokenizer && (
                 <>
-                  <CardFields field={card.field} errors={card.errors} t={t} />
+                  <CardFields
+                    tokenizer={card.tokenizer}
+                    field={card.field}
+                    errors={card.errors}
+                    t={t}
+                    onSecureChange={card.onSecureChange}
+                    onFilled={card.onFilled}
+                  />
                   {payment.installmentPlans.length > 0 && (
                     <div>
                       <label
@@ -435,7 +449,9 @@ function CheckoutForm({
                   ? t('pay.processing')
                   : method === 'pix'
                     ? t('pay.pixButton', { total: money(payment.total) })
-                    : t('pay.button', { total: money(payment.total) })}
+                    : method === 'boleto'
+                      ? t('pay.boletoButton', { total: money(payment.total) })
+                      : t('pay.button', { total: money(payment.total) })}
               </Button>
               {method === 'credit_card' && (
                 <p class="text-center text-xs text-neutral-500">

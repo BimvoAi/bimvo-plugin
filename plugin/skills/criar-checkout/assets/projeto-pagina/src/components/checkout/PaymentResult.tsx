@@ -8,7 +8,7 @@ import {
 } from '@bigbang/page-kit/checkout';
 import { AccessNotice, Alert, Button } from './ui';
 
-/** O que acontece depois de gerar o pedido: PIX, autenticação, análise, aprovado ou recusado (e o boleto de pedido antigo). */
+/** O que acontece depois de gerar o pedido: PIX, boleto, autenticação, análise, aprovado ou recusado. */
 export function PaymentResult({
   order,
   locale,
@@ -112,7 +112,6 @@ export function PaymentResult({
       />
     );
 
-  // Boleto não é mais oferecido; só aparece em pedido antigo.
   if (payment?.boleto) {
     const boleto = payment.boleto;
     return (

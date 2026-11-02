@@ -13,8 +13,9 @@ description: Cria, lista, ordena e ajusta ofertas de order bump (oferta marcada 
 | Limite | Até 3 por checkout, na ordem do lojista | Uma de cada vez; ao recusar, aparece a próxima |
 | Cupom | Não recebe cupom | Não recebe cupom |
 
-No upsell pago com cartão, o comprador pode precisar digitar o cartão de novo (e confirmar no
-banco, quando a loja usa 3DS); em PIX, gera nova cobrança. Upsell de produto físico usa o endereço e o frete do pedido original,
+No upsell pago com cartão, o comprador não redigita o cartão quando o adquirente permite (senão
+digita de novo e, na Cloudfy Payments com 3DS, confirma no banco); em PIX e boleto, gera nova
+cobrança. Upsell de produto físico usa o endereço e o frete do pedido original,
 sem cobrar frete de novo.
 
 ## Regras

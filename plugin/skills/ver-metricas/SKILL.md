@@ -1,6 +1,6 @@
 ---
 name: ver-metricas
-description: Mostra como está a operação de uma loja ou de todas as lojas da BimvoAI - faturamento, pedidos pagos, ticket médio, conversão e funil do checkout, aprovação por meio de pagamento, reembolsos, cupons, order bump e upsell, ranking de produtos, páginas e campanhas, série por dia e comparação com o período anterior, separado por moeda. Use quando o usuário disser /ver-metricas, "como estão as vendas", "quanto vendi", "faturamento do mês", "qual loja vende mais", "conversão do checkout", "taxa de aprovação do cartão", "qual campanha vende mais", "onde estou perdendo vendas".
+description: Mostra como está a operação de uma loja ou de todas as lojas da BimvoAI - faturamento, pedidos pagos, ticket médio, conversão e funil do checkout, aprovação por meio de pagamento e adquirente, reembolsos, cupons, order bump e upsell, ranking de produtos, páginas e campanhas, série por dia e comparação com o período anterior, separado por moeda. Use quando o usuário disser /ver-metricas, "como estão as vendas", "quanto vendi", "faturamento do mês", "qual loja vende mais", "conversão do checkout", "taxa de aprovação do cartão", "qual campanha vende mais", "onde estou perdendo vendas".
 ---
 
 # Métricas da operação
@@ -10,7 +10,7 @@ description: Mostra como está a operação de uma loja ou de todas as lojas da 
 - Tudo acontece na conta que autorizou este assistente.
 - Nunca some valores de moedas diferentes nem converta câmbio: mostre uma linha por moeda.
 - Taxas "sem dados" significam que não houve base no período; não as trate como zero.
-- Os números são lidos na hora; um pedido aparece assim que é pago ou atualizado.
+- Os números são lidos na hora; um pedido aparece assim que é pago ou atualizado pelo adquirente.
 - Se as ferramentas citadas não existirem no servidor, diga que métricas ainda não estão liberadas.
 
 ## Escolher a ferramenta
@@ -34,7 +34,7 @@ anterior de mesma duração. Interprete "este mês", "ontem", "black friday" no 
   (centavos): 24450 em BRL é R$ 244,50.
 - Série: `granularity` `day` ou `hour` (até 2 dias) e, opcionalmente, `metrics` entre
   `paidRevenue`, `paidOrders`, `checkoutConversion` e `startedCheckouts`.
-- Recortes (`dimension`): `payment_method`, `product`, `page`, `utm_source`,
+- Recortes (`dimension`): `payment_method`, `acquirer`, `product`, `page`, `utm_source`,
   `utm_campaign`, `installments`, `currency`, `buyer_country`, `store`, `order_bump`, `upsell`,
   `coupon`; `limit` de 1 a 50 (padrão 10).
 
@@ -53,7 +53,8 @@ Leitura útil dos números:
 
 - Conversão baixa com muitos "dados completos" e poucos pedidos → problema no pagamento ou no
   frete; olhe o recorte por meio.
-- Aprovação de cartão baixa → veja por parcelas e confira o 3DS em `configurar-pagamentos`.
+- Aprovação de cartão baixa num adquirente → compare adquirentes (recorte `acquirer`) e parcelas;
+  na Cloudfy Payments, confira o 3DS em `configurar-pagamentos`.
 - PIX com taxa de pagamento baixa → validade curta ou página sem copiar-código fácil.
 - Order bump com aceite abaixo de 5% → oferta pouco relacionada ou preço alto.
 

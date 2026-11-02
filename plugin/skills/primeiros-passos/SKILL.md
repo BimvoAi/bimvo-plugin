@@ -1,6 +1,6 @@
 ---
 name: primeiros-passos
-description: Guia o usuário do zero até a primeira venda na BimvoAI, conferindo o que já está pronto e fazendo só o que falta - conta conectada, loja, recebimentos, meios de pagamento, produto e página de vendas publicada. Use quando o usuário disser /primeiros-passos, "como começo", "configura tudo pra mim", "quero começar a vender", "o que falta pra eu vender", ou estiver claramente usando a BimvoAI pela primeira vez.
+description: Guia o usuário do zero até a primeira venda na BimvoAI, conferindo o que já está pronto e fazendo só o que falta - conta conectada, loja, recebimentos ou adquirente, meios de pagamento, produto e página de vendas publicada. Use quando o usuário disser /primeiros-passos, "como começo", "configura tudo pra mim", "quero começar a vender", "o que falta pra eu vender", ou estiver claramente usando a BimvoAI pela primeira vez.
 ---
 
 # Primeiros passos na BimvoAI
@@ -11,7 +11,7 @@ a BimvoAI. Confira tudo primeiro e só pergunte ou peça ação do que estiver f
 ## Regras
 
 - Tudo acontece na conta que autorizou este assistente.
-- Nunca peça senha, chave, segredo, token de pixel (server-side)
+- Nunca peça senha, chave ou segredo (de adquirente ou de Recebimentos), token de pixel (server-side)
   ou token de conta de anúncio (Meta, TikTok, Google Ads) na conversa. Para conectar algo,
   mostre o endereço devolvido pela ferramenta e peça para o usuário abrir no navegador.
 - Siga a mensagem de erro das ferramentas; o `code` é estável.
@@ -29,8 +29,8 @@ a BimvoAI. Confira tudo primeiro e só pergunte ou peça ação do que estiver f
 Chame, em paralelo quando possível:
 
 - `big_bang_get_account_status` → conta e financeiro (`finance`).
-- `big_bang_list_stores` → lojas, se estão prontas para vender, meios ativos, moedas, produtos e
-  páginas.
+- `big_bang_list_stores` → lojas, se estão prontas para vender, adquirentes, meios ativos, moedas,
+  produtos e páginas.
 
 Para a loja escolhida (a única, a padrão, ou a que o usuário citar), chame
 `big_bang_get_payment_settings` e `big_bang_list_products`.
@@ -39,8 +39,9 @@ Mostre um checklist curto com o que está pronto (✅) e o que falta (⬜), nest
 
 1. Conta conectada ao assistente
 2. Loja criada (toda conta já nasce com uma; renomear é opcional)
-3. Recebimentos ativos (`account.status` `active` em `big_bang_get_payment_settings`)
-4. Meios de pagamento ativos (PIX e cartão)
+3. Como receber: Recebimentos ativos (`account.status` `active`, Cloudfy Payments) ou um adquirente
+   próprio conectado (Mercado Pago, Pagar.me), em `big_bang_get_payment_settings`
+4. Meios de pagamento ativos (PIX, cartão e, com adquirente que tem, boleto)
 5. Ao menos um produto ativo
 6. Página da loja publicada: "Página de checkout publicada" na loja `checkout`, ou "Loja virtual
    publicada" na loja `ecommerce` (que antes precisa de `missingLegal` vazio)
@@ -51,20 +52,28 @@ Mostre um checklist curto com o que está pronto (✅) e o que falta (⬜), nest
 - **Loja**: pergunte o nome da marca e se quer renomear a loja padrão
   (`big_bang_update_store`) ou criar outra (`big_bang_create_store`). Pergunte a moeda só se ele
   vender fora do Brasil (padrão BRL).
-- **Recebimentos**: quem cadastra e ativa é o lojista, no painel; você só lê o status (skill
-  `configurar-pagamentos`). Em análise, ele segue montando a loja e vende quando aprovar. Faltando
-  algo do lado dele (verificação de identidade, cadastro recusado ou sem cadastro), peça para ele
-  abrir Recebimentos no painel (no app, `big_bang_abrir_minha_loja` com `payments`). Não fale em
-  adquirente nem em gateway.
+- **Como receber**: a loja vende pela Cloudfy Payments (Recebimentos; sem taxa de checkout nas
+  vendas) ou por um adquirente próprio (Mercado Pago ou Pagar.me; com a taxa de checkout por
+  venda). Siga a skill `configurar-pagamentos`.
+  - Recebimentos: quem cadastra e ativa é o lojista, no painel; você só lê o status. Em análise,
+    ele segue montando a loja. Faltando algo do lado dele (verificação de identidade, cadastro
+    recusado ou sem cadastro), peça para ele abrir Recebimentos no painel (no app,
+    `big_bang_abrir_minha_loja` com `payments`).
+  - Adquirente próprio: link de conexão pelo navegador (`big_bang_get_acquirer_connect_link`).
 - **Meios de pagamento**: proponha uma configuração padrão e peça só um "ok":
-  PIX ativo com 5% de desconto e validade de 30 minutos; cartão em até 12x, sem juros até 3x, com
-  a confirmação do banco (3DS) ligada. Com o "ok", uma chamada de
+  PIX ativo com 5% de desconto e validade de 30 minutos; cartão em até 12x, sem juros até 3x (com a
+  confirmação do banco, 3DS, ligada na Cloudfy Payments); boleto com vencimento em 3 dias, se o
+  adquirente tiver boleto. Com adquirente próprio, atribua cada meio a ele com
+  `acquirerByCurrency` (ex.: `{ "BRL": "mercado_pago" }`); em reais, sem adquirente atribuído, a
+  Cloudfy Payments processa quando os Recebimentos estão ativos. Com o "ok", uma chamada de
   `big_bang_update_payment_method` por meio:
   - PIX: `method: "pix"`, `active: true`, `adjustmentBps: -500`, `expiresInMinutes: 30`;
   - cartão: `method: "credit_card"`, `active: true`, `maxInstallments: 12`,
     `interestFreeInstallments: 3`, `monthlyInterestBps: 299` (2,99% ao mês; confirme o valor),
-    `threeDSecure: true`.
-  A loja só vende com `readyToSell: true` (Recebimentos ativos e algum meio ligado).
+    `threeDSecure: true` (só vale na Cloudfy Payments);
+  - boleto (só adquirente próprio que tem boleto): `method: "boleto"`, `active: true`,
+    `acquirerByCurrency`, `dueInDays: 3`.
+  A loja só vende com `readyToSell: true` (algum meio ligado com adquirente pronto).
 - **Produto**: pergunte nome, preço e se é físico; crie com `big_bang_create_product`
   (`prices: { "BRL": 9700 }` em centavos, `isPhysical`). Produto físico pede também frete
   (skill `configurar-frete`).
