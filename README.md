@@ -2,7 +2,7 @@
 
 Skills que ensinam um assistente de IA (Claude Code, Codex, Gemini CLI, Cursor, VS Code/Copilot,
 OpenCode, Claude Desktop) a operar a BimvoAI pelas ferramentas MCP. Com elas instaladas, o usuário
-faz tudo conversando: cria a loja, conecta o adquirente e configura PIX, cartão e boleto, cadastra produtos, configura frete, cupons
+faz tudo conversando: cria a loja, configura os recebimentos (Cloudfy Payments ou adquirente próprio), cadastra produtos, configura frete, cupons
 e ofertas, publica a página da loja (página de checkout ou loja virtual, conforme o tipo da loja)
 e acompanha pedidos e métricas.
 
@@ -98,7 +98,7 @@ dois primeiros passos; a autorização é sempre do usuário.
 Claude Code. Exige acesso de leitura ao repositório no GitHub.
 
 ```bash
-claude plugin marketplace add Cloudfy-Checkout-Brasil/cloudfy-atom
+claude plugin marketplace add bimvoai/bimvo-plugin
 claude plugin install bimvo@bimvo
 ```
 
@@ -125,11 +125,14 @@ instalar o `bimvo`, para não ficar com as ferramentas em dobro.
 (`.agents/plugins/marketplace.json`, plugin em `plugin/.codex-plugin/plugin.json`):
 
 ```bash
-codex plugin marketplace add Cloudfy-Checkout-Brasil/cloudfy-atom
+codex plugin marketplace add bimvoai/bimvo-plugin
 ```
 
 Depois, instale o `bimvo` em `/plugins`. O plugin do Codex não tem campo de configuração: o MCP
 aponta para produção (`plugin/.codex-mcp.json`). Para outra API, use o instalador abaixo.
+
+**Autorizar:** o marketplace pede a autorização na instalação (`"authentication": "ON_INSTALL"`),
+e o Codex abre o navegador. Se não abrir, rode `codex mcp login bimvo`.
 
 **Sem plugin:**
 

@@ -71,8 +71,8 @@ vê: a página, a aparência, os textos, o produto, o endereço e o que ele pode
 ## Passo 1 — Conferir a conta (antes de gerar qualquer coisa)
 
 1. Se as ferramentas `big_bang_*` não estão disponíveis, o servidor MCP da BimvoAI não está
-   instalado ou autorizado neste assistente. Diga isso e indique o guia de instalação
-   (`skills/README.md` do repositório BimvoAI). Pare.
+   instalado ou autorizado neste assistente. Diga isso e indique a tela Assistentes do painel da
+   BimvoAI, que mostra como instalar e autorizar em cada assistente. Pare.
 2. Chame `big_bang_get_account_status`.
 3. Se `finance.access` não for `full`, avise como em "Regras" e pare. Não gere a página antes
    disso: o usuário perderia o trabalho.
