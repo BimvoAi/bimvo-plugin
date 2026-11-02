@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.zip
+# Pacotes gerados por skills/install.mjs claude-desktop
+bimvo-skills/
+.DS_Store
+.serena/

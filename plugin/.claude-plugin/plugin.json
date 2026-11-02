@@ -1,0 +1,22 @@
+{
+  "name": "bimvo",
+  "version": "0.2.0",
+  "description": "Skills e servidor MCP da BimvoAI: crie lojas, configure pagamentos, produtos, frete, cupons e ofertas, publique páginas e acompanhe pedidos e métricas pelo assistente.",
+  "author": {
+    "name": "BimvoAI"
+  },
+  "userConfig": {
+    "mcp_url": {
+      "type": "string",
+      "title": "Endereço do MCP da BimvoAI",
+      "description": "URL do endpoint /mcp da API da BimvoAI (ex.: https://api.bimvoai.com/mcp).",
+      "default": "https://api.bimvoai.com/mcp"
+    }
+  },
+  "mcpServers": {
+    "bimvo": {
+      "type": "http",
+      "url": "${user_config.mcp_url}"
+    }
+  }
+}

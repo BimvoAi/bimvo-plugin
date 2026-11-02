@@ -1,0 +1,16 @@
+{
+  "name": "bimvo",
+  "owner": {
+    "name": "BimvoAI"
+  },
+  "metadata": {
+    "description": "Plugin oficial da BimvoAI para assistentes de IA."
+  },
+  "plugins": [
+    {
+      "name": "bimvo",
+      "source": "./plugin",
+      "description": "Skills e servidor MCP da BimvoAI para operar lojas, checkout e páginas pelo assistente."
+    }
+  ]
+}

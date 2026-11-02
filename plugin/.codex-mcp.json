@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "bimvo": {
+      "type": "http",
+      "url": "https://api.bimvoai.com/mcp"
+    }
+  }
+}
