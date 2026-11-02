@@ -39,8 +39,8 @@ função ainda não está liberada.
     agente monta o projeto e publica por essas ferramentas; o build roda no servidor. O pacote
     sobe pelo fluxo `big_bang_start_page_upload`, envio e `big_bang_publish_page`, que o agente
     nunca chama direto.
-  - Com `big_bang_start_page_build` e um terminal (Claude Code e Codex, pelo plugin ou pelo
-    instalador), o assistente monta o projeto no computador do usuário a partir do template que a
+  - Com `big_bang_start_page_build` e um terminal (Claude Code e Codex), o
+    assistente monta o projeto no computador do usuário a partir do template que a
     skill leva (`assets/projeto-pagina`) e envia só o projeto. O cloud-agent faz o build com o kit
     e a BimvoAI publica, sem créditos de IA (`specs/043-local-page-server-build/contract.md`).
   - Sem terminal (como o claude.ai), não há como montar a página: as skills indicam o Claude
@@ -54,48 +54,23 @@ função ainda não está liberada.
 ## Antes de instalar
 
 - Uma conta na BimvoAI (cadastro pelo site).
-- O endereço do MCP da BimvoAI: `https://<api-da-bimvo>/mcp` em produção, ou
-  `http://localhost:3005/mcp` com a API local (`pnpm dev`).
-- Node.js 20 ou superior (para o instalador).
-- O código deste repositório na máquina (`git clone`), exceto no Claude Code via plugin.
+- O endereço do MCP da BimvoAI: `https://api.bimvoai.com/mcp`.
+- Fora do Claude Code e do Codex: o código deste repositório na máquina (`git clone`), para copiar
+  as skills de `plugin/skills/`.
 
 A autorização é sempre pelo navegador (OAuth): o assistente abre a tela da BimvoAI, o usuário entra
 com a própria conta e autoriza. Nenhuma senha, token ou chave passa pela conversa.
 
-## Instalação rápida
-
-Na raiz do repositório:
-
-```bash
-node plugin/skills/install.mjs <assistente> --url https://<api-da-bimvo>/mcp
-```
-
-`<assistente>` pode ser `claude`, `codex`, `gemini`, `cursor`, `copilot`, `opencode`,
-`claude-desktop`, ou `all` (todos menos o `claude-desktop`). Dá para passar vários de uma vez. O
-instalador copia as skills e registra o MCP no assistente; quando a CLI do assistente não está instalada,
-mostra o comando ou o trecho de configuração para fazer à mão. No fim, lista o passo de autorização
-de cada um.
-
-Opções:
-
-| Opção | Efeito |
-|---|---|
-| `--scope project` | Instala só no diretório atual, em vez de no usuário. |
-| `--link` | Cria links para as skills em vez de copiar: um `git pull` já atualiza. |
-| `--only skills` / `--only mcp` | Instala só uma das partes. |
-| `--dry-run` | Mostra o que faria, sem mudar nada. |
-
-A variável `BIMVO_MCP_URL` substitui o `--url`.
-
 ## Por assistente
 
-Para cada assistente: onde ficam as skills, como registrar o MCP e como autorizar. O instalador faz os
-dois primeiros passos; a autorização é sempre do usuário.
+Para cada assistente: onde ficam as skills, como registrar o MCP e como autorizar. Fora do Claude
+Code e do Codex, copie as pastas de `plugin/skills/` para a pasta de skills indicada e registre o
+MCP no assistente. A autorização é sempre do usuário.
 
 ### Claude Code
 
 **Jeito mais prático: plugin.** Skills e MCP entram juntos, e as atualizações chegam pelo próprio
-Claude Code. Exige acesso de leitura ao repositório no GitHub.
+Claude Code.
 
 ```bash
 claude plugin marketplace add bimvoai/bimvo-plugin
@@ -106,18 +81,17 @@ Na instalação, o Claude Code pede o endereço do MCP (`mcp_url`). Para mudar d
 `claude plugin configure bimvo`. Com o plugin, as skills são chamadas como
 `/bimvo:criar-checkout`.
 
-**Sem plugin:** `node plugin/skills/install.mjs claude --url …`. As skills vão para `~/.claude/skills/`
-(ou `.claude/skills/` com `--scope project`), e o MCP é registrado com:
+**Sem plugin:** copie as pastas de `plugin/skills/` para `~/.claude/skills/` (ou `.claude/skills/`
+no projeto) e registre o MCP com:
 
 ```bash
-claude mcp add --transport http --scope user bimvo https://<api-da-bimvo>/mcp
+claude mcp add --transport http --scope user bimvo https://api.bimvoai.com/mcp
 ```
 
 **Autorizar:** abra `claude`, digite `/mcp`, escolha `bimvo` e autorize no navegador.
 
-O servidor e o plugin se chamavam `big-bang`. Quem instalou com esse nome: rode o instalador de
-novo (ele remove o registro antigo) ou `claude plugin uninstall big-bang@big-bang` antes de
-instalar o `bimvo`, para não ficar com as ferramentas em dobro.
+O servidor e o plugin se chamavam `big-bang`. Quem instalou com esse nome: rode
+`claude plugin uninstall big-bang@big-bang` (ou `claude mcp remove big-bang`) antes de instalar o `bimvo`, para não ficar com as ferramentas em dobro.
 
 ### OpenAI Codex (CLI e app)
 
@@ -129,7 +103,7 @@ codex plugin marketplace add bimvoai/bimvo-plugin
 ```
 
 Depois, instale o `bimvo` em `/plugins`. O plugin do Codex não tem campo de configuração: o MCP
-aponta para produção (`plugin/.codex-mcp.json`). Para outra API, use o instalador abaixo.
+aponta para produção (`plugin/.codex-mcp.json`). Para outra API, use a instalação sem plugin abaixo.
 
 **Autorizar:** o marketplace pede a autorização na instalação (`"authentication": "ON_INSTALL"`),
 e o Codex abre o navegador. Se não abrir, rode `codex mcp login bimvo`.
@@ -140,12 +114,12 @@ e o Codex abre o navegador. Se não abrir, rode `codex mcp login bimvo`.
 - MCP, por comando ou em `~/.codex/config.toml`:
 
   ```bash
-  codex mcp add bimvo --url https://<api-da-bimvo>/mcp
+  codex mcp add bimvo --url https://api.bimvoai.com/mcp
   ```
 
   ```toml
   [mcp_servers.bimvo]
-  url = "https://<api-da-bimvo>/mcp"
+  url = "https://api.bimvoai.com/mcp"
   ```
 
 - Autorizar: `codex mcp login bimvo`.
@@ -157,11 +131,11 @@ e o Codex abre o navegador. Se não abrir, rode `codex mcp login bimvo`.
 - MCP, por comando ou em `~/.gemini/settings.json` (Streamable HTTP usa `httpUrl`, não `url`):
 
   ```bash
-  gemini mcp add --transport http -s user bimvo https://<api-da-bimvo>/mcp
+  gemini mcp add --transport http -s user bimvo https://api.bimvoai.com/mcp
   ```
 
   ```json
-  { "mcpServers": { "bimvo": { "httpUrl": "https://<api-da-bimvo>/mcp" } } }
+  { "mcpServers": { "bimvo": { "httpUrl": "https://api.bimvoai.com/mcp" } } }
   ```
 
 - Autorizar: dentro do `gemini`, rode `/mcp auth bimvo`. O login precisa de navegador na mesma
@@ -174,7 +148,7 @@ e o Codex abre o navegador. Se não abrir, rode `codex mcp login bimvo`.
 - MCP em `~/.cursor/mcp.json` (ou `.cursor/mcp.json` no projeto):
 
   ```json
-  { "mcpServers": { "bimvo": { "url": "https://<api-da-bimvo>/mcp" } } }
+  { "mcpServers": { "bimvo": { "url": "https://api.bimvoai.com/mcp" } } }
   ```
 
 - Autorizar: em Settings > MCP, ative `bimvo` e clique em Login.
@@ -187,7 +161,7 @@ e o Codex abre o navegador. Se não abrir, rode `codex mcp login bimvo`.
   Configuration"):
 
   ```json
-  { "servers": { "bimvo": { "type": "http", "url": "https://<api-da-bimvo>/mcp" } } }
+  { "servers": { "bimvo": { "type": "http", "url": "https://api.bimvoai.com/mcp" } } }
   ```
 
 - Autorizar: no `mcp.json`, clique em Start sobre `bimvo`; o VS Code abre o navegador.
@@ -201,7 +175,7 @@ e o Codex abre o navegador. Se não abrir, rode `codex mcp login bimvo`.
   ```json
   {
     "$schema": "https://opencode.ai/config.json",
-    "mcp": { "bimvo": { "type": "remote", "url": "https://<api-da-bimvo>/mcp", "enabled": true } }
+    "mcp": { "bimvo": { "type": "remote", "url": "https://api.bimvoai.com/mcp", "enabled": true } }
   }
   ```
 
@@ -214,9 +188,9 @@ Não há instalação por linha de comando.
 1. **MCP**: Customize > Connectors > Add custom connector, nome `bimvo`, URL do MCP. Em planos
    Team/Enterprise, quem administra adiciona em Organization settings > Connectors e cada pessoa
    clica em Connect.
-2. **Skills**: precisam da execução de código ligada (Settings > Capabilities). Gere os pacotes com
-   `node plugin/skills/install.mjs claude-desktop`, que cria um `.zip` por skill em `./bimvo-skills/`, e
-   envie um por vez em Customize > Skills > Upload a skill.
+2. **Skills**: precisam da execução de código ligada (Settings > Capabilities). Compacte cada pasta de
+   `plugin/skills/` num `.zip` (por exemplo, `cd plugin/skills && zip -r criar-checkout.zip
+   criar-checkout`) e envie um por vez em Customize > Skills > Upload a skill.
 
 Nestes assistentes, a `criar-checkout` e a `criar-loja-virtual` não rodam nada na máquina do
 usuário: pedem a página pronta pelo MCP e a Cloudfy AI da BimvoAI monta e publica no servidor. Nos
@@ -243,11 +217,10 @@ Problemas comuns:
 
 ## Atualizar e remover
 
-- **Atualizar:** `git pull` e rode o instalador de novo, que substitui as pastas e apaga as de
-  skills que deixaram de existir (a `criar-pagina` virou `criar-checkout` e `criar-loja-virtual`).
-  Com `--link`, o `git pull` basta, exceto quando uma skill some ou muda de nome: aí rode o
-  instalador de novo. No plugin do Claude Code, use `claude plugin update bimvo`; no do Codex, atualize o marketplace
-  em `/plugins`.
+- **Atualizar:** no plugin do Claude Code, use `claude plugin update bimvo`; no do Codex, atualize
+  o marketplace em `/plugins`. Sem plugin: `git pull` e copie as pastas de `plugin/skills/` de
+  novo, apagando as de skills que deixaram de existir (a `criar-pagina` virou `criar-checkout` e
+  `criar-loja-virtual`).
 - **Remover:** apague as pastas das skills (`~/.claude/skills/<nome>`, `~/.agents/skills/<nome>`)
   e remova o servidor `bimvo` do assistente (`claude mcp remove bimvo`,
   `codex mcp remove bimvo`, `gemini mcp remove bimvo`, ou apague a entrada no JSON).
@@ -273,7 +246,7 @@ Problemas comuns:
   `plugin/.codex-plugin/plugin.json`). O MCP do Claude Code fica no `plugin.json` (com `mcp_url`
   configurável); o do Codex, em `plugin/.codex-mcp.json`. Não crie `plugin/.mcp.json`: o Claude
   Code o carregaria também e o servidor `bimvo` apareceria em dobro.
-- Skill nova entra automaticamente no plugin, no instalador e nos pacotes `.zip`; só falta
+- Skill nova entra automaticamente no plugin; só falta
   incluí-la na tabela do topo deste arquivo.
 - O template de página que a `criar-checkout` e a `criar-loja-virtual` levam
   (`assets/projeto-pagina`) é cópia de `packages/core/page-template` do repo big-bang. Mudou o
