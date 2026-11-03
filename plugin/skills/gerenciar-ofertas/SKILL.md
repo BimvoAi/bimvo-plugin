@@ -46,6 +46,67 @@ variante não leva `offeredVariantId`.
 
 Mostre o preço normal ao lado do especial ("de R$ 97,00 por R$ 47,00") para o usuário conferir.
 
+### Upsell numa página do lojista (outro site)
+
+Se o lojista quer mostrar o upsell numa página dele (WordPress, Elementor, Webflow, Wix, HTML
+próprio), passe `externalUrl` (https) em `big_bang_create_upsell_offer` ou
+`big_bang_update_upsell_offer`. Para voltar a oferta para dentro do checkout, passe `null`.
+Depois do pagamento, o checkout leva o comprador para essa página com `bb_accept` e `bb_decline`
+na query. Os botões da página voltam ao checkout, onde o comprador confirma com um clique. O link
+sozinho nunca cobra. Passe ao lojista este passo a passo, que também aparece na tela Upsell do
+painel ao escolher "Numa página minha (outro site)":
+
+1. A página mostra o produto e o mesmo preço especial da oferta, que é o valor cobrado. Ela não
+   pede dados do cartão.
+2. Marque os botões. Num construtor de páginas, coloque a classe CSS `bb-accept` no botão de
+   aceitar e `bb-decline` no de recusar. Em HTML, use os atributos `data-bb-accept` e
+   `data-bb-decline`.
+3. Cole este código antes de `</body>` (num construtor, use um bloco de HTML personalizado no fim
+   da página):
+
+   ```html
+   <script>
+   (function () {
+     var params = new URLSearchParams(window.location.search);
+     function backUrl(name) {
+       var value = params.get(name);
+       if (!value) return null;
+       try {
+         var url = new URL(value);
+         return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : null;
+       } catch (error) {
+         return null;
+       }
+     }
+     var targets = { accept: backUrl('bb_accept'), decline: backUrl('bb_decline') };
+     function bind() {
+       ['accept', 'decline'].forEach(function (action) {
+         var url = targets[action];
+         if (!url) return;
+         var nodes = document.querySelectorAll('[data-bb-' + action + '], .bb-' + action);
+         Array.prototype.forEach.call(nodes, function (node) {
+           var link = node.tagName === 'A' ? node : node.querySelector('a');
+           if (link) link.href = url;
+           node.addEventListener('click', function (event) {
+             event.preventDefault();
+             window.location.href = url;
+           });
+         });
+       });
+     }
+     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+     else bind();
+   })();
+   </script>
+   ```
+
+4. Para testar, use o botão "Testar minha página" no formulário da oferta, no painel. Ele abre a
+   página como o checkout abriria, e cada botão deve levar a uma tela de confirmação do teste.
+
+A volta só funciona no mesmo navegador da compra. Se o prazo da oferta já acabou, o comprador vai
+direto para a página de obrigado. A página externa recebe só o id da oferta (`bb_offer`), sem
+dados do comprador nem do pedido.
+
 ## Listar, ordenar, ajustar
 
 - `big_bang_list_order_bumps` / `big_bang_list_upsell_offers`: mostre na ordem, com disparadores,
