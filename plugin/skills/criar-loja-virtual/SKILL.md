@@ -23,6 +23,12 @@ tem:
   frase que ela é criada pelo Claude Code ou Codex com o plugin da BimvoAI, ou com um modelo
   pronto em Modelos, no painel, e pare.
 
+Antes de concluir que uma ferramenta falta, procure-a: num assistente que carrega ferramentas
+sob demanda (no Claude Code, as que aparecem só pelo nome), carregue `big_bang_start_page_build`
+e `big_bang_build_page` pela busca de ferramentas antes de usar. Com `big_bang_start_page_build`
+disponível e um terminal, nunca diga ao lojista que não dá para publicar nem peça para
+reconectar a BimvoAI: monte aqui e publique.
+
 ## Regras
 
 - Tudo acontece na conta que autorizou este assistente. Não existe como agir em outra conta.
@@ -155,6 +161,11 @@ cookies), SEO e páginas de conteúdo são configuração da loja: mudam na pró
 nem publicar versão. Para esses pedidos, numa loja virtual já publicada, siga
 [references/vitrine.md](references/vitrine.md) em vez dos Passos 3 a 5. Gere e publique de novo
 só quando o pedido muda o desenho da página (layout, componentes, textos de interface).
+
+Isso só vale para loja virtual montada com o template da versão 1.2.0 do plugin ou posterior.
+A versão no ar publicada antes de 04/11/2026 não lê essas configurações: elas ficam guardadas
+mas não aparecem até publicar uma versão nova. Veja "Loja montada antes da 1.2.0" em
+[references/vitrine.md](references/vitrine.md).
 
 ## Versões
 

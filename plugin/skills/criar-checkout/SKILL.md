@@ -22,6 +22,12 @@ tem:
   frase que ela é criada pelo Claude Code ou Codex com o plugin da BimvoAI, ou com um modelo
   pronto em Modelos, no painel, e pare.
 
+Antes de concluir que uma ferramenta falta, procure-a: num assistente que carrega ferramentas
+sob demanda (no Claude Code, as que aparecem só pelo nome), carregue `big_bang_start_page_build`
+e `big_bang_build_page` pela busca de ferramentas antes de usar. Com `big_bang_start_page_build`
+disponível e um terminal, nunca diga ao lojista que não dá para publicar nem peça para
+reconectar a BimvoAI: monte aqui e publique.
+
 ## Regras
 
 - Tudo acontece na conta que autorizou este assistente. Não existe como agir em outra conta.
