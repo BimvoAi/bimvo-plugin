@@ -1,6 +1,6 @@
 ---
 name: configurar-loja
-description: Cria, lista e ajusta lojas na BimvoAI - nome, tipo (checkout ou ecommerce), identificação do vendedor e políticas da loja virtual, idiomas, moedas aceitas, moeda padrão e fuso horário - pixels de anúncio (Meta, Google, TikTok, Kwai), e mostra o que cada loja tem (páginas, produtos, adquirentes, meios de pagamento, se está pronta para vender). Use quando o usuário disser /configurar-loja, "cria uma loja", "minhas lojas", "renomeia a loja", "quero vender em dólar/euro", "muda o fuso da loja", "qual loja está pronta", "loja em inglês", "loja virtual", "CNPJ da loja", "política de troca", "política de privacidade", "pixel da Meta", "pixel do TikTok", "tag do Google", "pausar pixel", "pixel por produto".
+description: Cria, lista e ajusta lojas na BimvoAI - nome, tipo (checkout ou ecommerce), identificação do vendedor e políticas da loja virtual (troca, privacidade, frete e termos de uso), idiomas, moedas aceitas, moeda padrão e fuso horário - pixels de anúncio (Meta, Google, TikTok, Kwai), e-mails automáticos ao comprador (ligar e desligar, inclusive carrinho abandonado e pedido de avaliação), e mostra o que cada loja tem (páginas, produtos, adquirentes, meios de pagamento, se está pronta para vender). Use quando o usuário disser /configurar-loja, "cria uma loja", "minhas lojas", "renomeia a loja", "quero vender em dólar/euro", "muda o fuso da loja", "qual loja está pronta", "loja em inglês", "loja virtual", "CNPJ da loja", "política de troca", "política de privacidade", "política de frete", "termos de uso", "e-mail de carrinho abandonado", "desliga o e-mail de PIX", "pixel da Meta", "pixel do TikTok", "tag do Google", "pausar pixel", "pixel por produto".
 ---
 
 # Lojas na BimvoAI
@@ -52,9 +52,10 @@ produtos para o comprador navegar. Moeda padrão é BRL e idioma padrão
 - **Identificação do vendedor** (`seller`, exigida na loja virtual): nome ou razão social, CPF ou
   CNPJ e endereço completo (rua, número, complemento opcional, bairro, cidade, UF, CEP). Peça os
   dados ao usuário; não invente. O objeto enviado substitui o anterior.
-- **Políticas** (`policies`, exigidas na loja virtual): `returns` (troca e devolução) e `privacy`
-  (privacidade), em texto simples. O texto do idioma padrão vai em `text`; os outros idiomas
-  habilitados, em `translations`. Se o usuário pedir ajuda, proponha um texto inicial curto e
+- **Políticas** (`policies`): `returns` (troca e devolução) e `privacy` (privacidade), exigidas
+  na loja virtual, e as opcionais `shipping` (frete e entrega) e `terms` (termos de uso), que a
+  loja virtual mostra em `/politicas/frete` e `/politicas/termos`. Texto simples: o do idioma
+  padrão vai em `text`; os outros idiomas habilitados, em `translations`. Se o usuário pedir ajuda, proponha um texto inicial curto e
   claro (no Brasil, cite o direito de arrependimento de 7 dias da compra on-line e como os dados
   são usados), mostre o texto inteiro, diga que o conteúdo é responsabilidade dele e só grave
   depois que ele confirmar. Uma política ausente no envio fica como está; `null` apaga.
@@ -64,6 +65,10 @@ produtos para o comprador navegar. Moeda padrão é BRL e idioma padrão
   idioma padrão ficam nos campos principais; se mudar o padrão, peça para recolocar esse texto e
   mover o antigo para `translations` (skill `gerenciar-produtos`).
 - **E-mail de contato** (`supportEmail`).
+- **Embalagem de presente** (`giftWrap`): opção cobrada à parte no checkout; veja a skill
+  `gerenciar-ofertas`.
+- **Aparência da loja virtual** (cores, logo, menus, página inicial, páginas de conteúdo): não é
+  aqui; siga "Ajustar sem publicar de novo" da skill `criar-loja-virtual`.
 - **Página de obrigado externa** (`thankYouUrl`, só `https://`): depois do pagamento aprovado, o
   comprador vai para esse endereço com `?order=<orderId>&token=<orderToken>`. Vale para todas as
   páginas da loja na hora, sem republicar. `null` volta para a página de obrigado padrão, que toda
@@ -148,6 +153,22 @@ O texto do SMS é fixo, o mesmo para todas as lojas: começa com o nome da loja,
 - `big_bang_get_sms_recovery_metrics` responde "quanto recuperei com SMS essa semana?" (enviados, cliques, vendas, receita, custo, ROI).
 - `big_bang_list_sms_messages` lista os envios com telefone mascarado.
 - A recuperação por SMS começa desativada em toda conta e só a Cloudfy libera. Se `billing.featureEnabled` vier `false`, diga isso e oriente pedir a liberação ao suporte; não tente ligar o desconto. Ligar "Descontar SMS do meu saldo" é `big_bang_set_sms_billing_consent`. É ação de dinheiro: mostre o `priceCentsPerSegment` (valor provisório) e espere a confirmação. Sem essa autorização, nenhum SMS sai. Sem saldo, os envios pausam e o saldo não fica negativo.
+
+## E-mails ao comprador
+
+A loja manda e-mails automáticos ao comprador, no idioma do pedido: código PIX, pagamento em
+análise, compra aprovada, envio com rastreio, PIX vencido, reembolso, pedido de avaliação
+(`review_request`) e carrinho abandonado (`checkout_abandoned`).
+
+- `big_bang_get_buyer_email_settings` mostra cada tipo e se está ligado;
+  `big_bang_update_buyer_email_settings` liga ou desliga só os tipos informados.
+- Todos nascem ligados, menos o de carrinho abandonado, que só sai se o lojista ligar. Ele leva o
+  link para o comprador retomar o checkout.
+- O pedido de avaliação, mesmo ligado, só sai depois de o lojista definir em quantos dias ele vai
+  (Minha loja › Avaliações; skill `avaliacoes-e-contatos`).
+- O acesso aos produtos digitais não pode ser desligado: com a compra aprovada desligada, ele sai
+  num e-mail próprio.
+- "O comprador não recebeu": `big_bang_list_buyer_emails` com o número do pedido ou o e-mail.
 
 ## Erros
 

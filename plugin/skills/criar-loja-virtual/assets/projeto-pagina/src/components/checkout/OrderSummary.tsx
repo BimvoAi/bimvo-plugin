@@ -24,7 +24,7 @@ export function OrderSummary({
   busy: boolean;
   t: Translate;
 }) {
-  const { money, bumps, coupon, readOnly } = form;
+  const { money, bumps, coupon, readOnly, discounts, giftWrap } = form;
   const method = form.payment.method;
   const applied = coupon.applied;
   const rejected = coupon.rejected;
@@ -37,7 +37,7 @@ export function OrderSummary({
       <ul class="space-y-2">
         {checkout.items.map((item) => (
           <li
-            key={`${item.source}-${item.productId}`}
+            key={`${item.source}-${item.productId}-${item.variantId ?? ''}-${JSON.stringify(item.customization ?? [])}`}
             class="flex items-center justify-between gap-4 text-sm"
           >
             <span class="flex min-w-0 items-center gap-3">
@@ -56,6 +56,16 @@ export function OrderSummary({
                   <span class="text-neutral-500">{item.quantity}× </span>
                 )}
                 {item.name}
+                {item.variantLabel && (
+                  <span class="block text-xs text-neutral-500">
+                    {item.variantLabel}
+                  </span>
+                )}
+                {item.customization?.map((entry) => (
+                  <span key={entry.key} class="block text-xs text-neutral-500">
+                    {entry.label}: {entry.value}
+                  </span>
+                ))}
               </span>
             </span>
             <span class="tabular-nums">{money(item.total)}</span>
@@ -140,16 +150,71 @@ export function OrderSummary({
         <p class="text-sm text-red-600">{rejected.message}</p>
       )}
 
+      {giftWrap.offer && !readOnly && (
+        <div class="space-y-2 rounded-xl border border-neutral-200 bg-white p-3 text-sm">
+          <label class="flex cursor-pointer items-center justify-between gap-3">
+            <span class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                class="size-4 accent-neutral-900"
+                checked={giftWrap.offer.selected}
+                disabled={busy}
+                onChange={(e) =>
+                  giftWrap.toggle((e.currentTarget as HTMLInputElement).checked)
+                }
+              />
+              {giftWrap.offer.label}
+            </span>
+            <span class="tabular-nums">
+              {giftWrap.offer.price > 0
+                ? `+ ${money(giftWrap.offer.price)}`
+                : t('summary.free')}
+            </span>
+          </label>
+          {giftWrap.offer.selected && (
+            <textarea
+              aria-label={t('giftWrap.message')}
+              placeholder={t('giftWrap.message')}
+              value={giftWrap.message}
+              maxLength={giftWrap.maxMessage}
+              rows={2}
+              onInput={(e) =>
+                giftWrap.setMessage(
+                  (e.currentTarget as HTMLTextAreaElement).value,
+                )
+              }
+              onBlur={giftWrap.saveMessage}
+              class="w-full rounded-lg border border-neutral-300 px-3 py-2 outline-none focus:border-neutral-900"
+            />
+          )}
+        </div>
+      )}
+
       <dl class="space-y-1 border-t border-neutral-200 pt-3 text-sm">
         <Row
           label={t('summary.subtotal')}
           value={money(checkout.totals.subtotal)}
         />
-        {checkout.totals.discount > 0 && (
+        {discounts.automatic && discounts.automatic.amount > 0 && (
           <Row
-            label={t('summary.discount')}
-            value={`− ${money(checkout.totals.discount)}`}
+            label={discounts.automatic.title}
+            value={`− ${money(discounts.automatic.amount)}`}
             accent
+          />
+        )}
+        {discounts.couponDiscount > 0 && (
+          <Row
+            label={
+              discounts.automatic ? t('summary.coupon') : t('summary.discount')
+            }
+            value={`− ${money(discounts.couponDiscount)}`}
+            accent
+          />
+        )}
+        {(checkout.totals.giftWrap ?? 0) > 0 && (
+          <Row
+            label={t('summary.giftWrap')}
+            value={money(checkout.totals.giftWrap ?? 0)}
           />
         )}
         {checkout.requiresShipping && (

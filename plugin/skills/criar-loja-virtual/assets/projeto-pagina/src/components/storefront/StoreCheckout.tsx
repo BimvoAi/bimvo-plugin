@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import type { CartItem, Currency } from '@bigbang/page-kit/checkout';
+import type { BuyerCartItem, Currency } from '@bigbang/page-kit/checkout';
 import { href, navigate } from '@bigbang/page-kit/router';
 import { Checkout } from '../checkout/Checkout';
 import { checkoutLocale, type Shop } from './shop';
@@ -14,7 +14,7 @@ export function StoreCheckout({ shop }: { shop: Shop }) {
   const { config, view, t, cart } = shop;
   const [attempt, setAttempt] = useState(0);
   const check = useCartStatus(shop, attempt);
-  const [items, setItems] = useState<CartItem[] | null>(null);
+  const [items, setItems] = useState<BuyerCartItem[] | null>(null);
 
   useEffect(() => {
     if (items || check.status !== 'ready') return;
@@ -24,6 +24,7 @@ export function StoreCheckout({ shop }: { shop: Shop }) {
         productId: line.productId,
         ...(line.variantId ? { variantId: line.variantId } : {}),
         quantity: line.quantity,
+        ...(line.customization ? { customization: line.customization } : {}),
       }));
     if (available.length === 0) navigate(href('/carrinho'), { replace: true });
     else setItems(available);

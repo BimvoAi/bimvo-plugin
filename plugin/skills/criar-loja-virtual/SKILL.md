@@ -1,6 +1,6 @@
 ---
 name: criar-loja-virtual
-description: Cria e publica a loja virtual completa de uma loja do tipo ecommerce na BimvoAI - início, busca, categorias, página de produto, carrinho, checkout, acompanhamento do pedido e políticas - no domínio do lojista. Também atualiza a loja virtual já publicada e cuida das versões (listar, voltar a uma versão, publicar uma versão em outra página, usar como base, apagar). Use quando o usuário pedir /criar-loja-virtual ou disser "cria minha loja virtual", "cria minha loja online", "cria o site da loja", "publica a loja virtual", "volta a loja para a versão 2", e também quando pedir landing page, página de captura ou link na bio numa loja ecommerce (a skill explica que a página é a loja virtual e oferece criá-la). Para loja do tipo checkout, use a skill criar-checkout.
+description: Cria e publica a loja virtual completa de uma loja do tipo ecommerce na BimvoAI - início, busca, categorias, página de produto, carrinho, checkout, acompanhamento do pedido e políticas - no domínio do lojista. Também atualiza a loja virtual já publicada, ajusta sem republicar o que é configuração da loja (cores, fontes, logo, barra de anúncio, menus, seções da página inicial, blocos da página de produto, selos, recursos como WhatsApp e popup de newsletter, SEO e páginas de conteúdo) e cuida das versões (listar, voltar a uma versão, publicar uma versão em outra página, usar como base, apagar). Use quando o usuário pedir /criar-loja-virtual ou disser "cria minha loja virtual", "cria minha loja online", "cria o site da loja", "publica a loja virtual", "volta a loja para a versão 2", "muda as cores da loja", "coloca uma barra de anúncio", "arruma o menu da loja", "troca o banner da página inicial", "cria a página quem somos", "liga o botão do WhatsApp", e também quando pedir landing page, página de captura ou link na bio numa loja ecommerce (a skill explica que a página é a loja virtual e oferece criá-la). Para loja do tipo checkout, use a skill criar-checkout.
 ---
 
 # Criar e publicar a loja virtual
@@ -146,6 +146,15 @@ Com `big_bang_publicar_pagina`, publique quando o usuário pedir, seguindo
 domínio como em "Domínio" de [references/publicar.md](references/publicar.md). Com o domínio
 ativo, dê o endereço da loja: ele abre o início, e cada produto e categoria tem endereço próprio
 que pode ser compartilhado.
+
+## Ajustar sem publicar de novo
+
+Cores, fontes, logo, barra de anúncio, menus, seções da página inicial, blocos da página de
+produto, selos, recursos (WhatsApp, popup de newsletter, favoritos, avise-me, frete grátis,
+cookies), SEO e páginas de conteúdo são configuração da loja: mudam na próxima abertura, sem gerar
+nem publicar versão. Para esses pedidos, numa loja virtual já publicada, siga
+[references/vitrine.md](references/vitrine.md) em vez dos Passos 3 a 5. Gere e publique de novo
+só quando o pedido muda o desenho da página (layout, componentes, textos de interface).
 
 ## Versões
 

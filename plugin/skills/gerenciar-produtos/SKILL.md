@@ -1,6 +1,6 @@
 ---
 name: gerenciar-produtos
-description: Cadastra, lista, busca, altera preço e desativa produtos e categorias do catálogo de uma loja da BimvoAI, com preço em cada moeda, tradução por idioma, indicação de produto físico ou digital e os entregáveis (links e instruções) que o comprador de produto digital recebe. Use quando o usuário disser /gerenciar-produtos, "cria um produto", "cadastra meu curso", "muda o preço", "coloca preço em dólar", "traduz o produto", "cria uma categoria", "desativa o produto", "quais produtos eu tenho", "adiciona o link do curso", "quais produtos estão sem conteúdo", ou quando outra skill precisar de um produto que não existe.
+description: Cadastra, lista, busca, altera preço e desativa produtos, categorias (com foto e subcategoria) e coleções da loja virtual de uma loja da BimvoAI, com preço em cada moeda, tradução por idioma, indicação de produto físico ou digital, marcadores, ficha técnica, amostras de cor, foto por variante, guia de medidas, SEO, campos de personalização (gravação, nome) e os entregáveis (links e instruções) que o comprador de produto digital recebe. Use quando o usuário disser /gerenciar-produtos, "cria um produto", "cadastra meu curso", "muda o preço", "coloca preço em dólar", "traduz o produto", "cria uma categoria", "desativa o produto", "quais produtos eu tenho", "adiciona o link do curso", "quais produtos estão sem conteúdo", "cria uma coleção", "coleção de presentes", "subcategoria", "ficha técnica", "amostra de cor", "foto da variante", "guia de medidas", "campo de gravação", "personalizar com nome", ou quando outra skill precisar de um produto que não existe.
 ---
 
 # Produtos da loja
@@ -39,7 +39,9 @@ Não repita o idioma padrão nesse mapa. O mapa enviado substitui o anterior.
 - **Listar**: `big_bang_list_products` (inclua inativos só se pedido). Tabela com nome, preços,
   físico/digital, ativo. Para achar por texto, `big_bang_search_products`.
 - **Categorias**: `big_bang_create_category`, `big_bang_list_categories`, `big_bang_update_category`.
-  Até 100 por loja. Tradução no mesmo formato do produto.
+  Até 100 por loja. Tradução no mesmo formato do produto. Na loja virtual, a categoria pode ter
+  foto (`imageUrl`, https) e ficar dentro de outra (`parentId`, um nível só: a mãe é do primeiro
+  nível, e uma categoria com filhas não entra em outra).
 - **Criar**: precisa de loja, nome e preço. Pergunte se é **físico** só se não for óbvio (curso,
   e-book e mentoria são digitais; camiseta e livro impresso são físicos). Descrição, categoria,
   imagens https (até 8), código e estoque são opcionais. `stock` nulo não controla; `0` esgota.
@@ -55,6 +57,40 @@ Não repita o idioma padrão nesse mapa. O mapa enviado substitui o anterior.
   preço da época, na moeda do pedido.
 - **Desativar**: confirme antes. Produto inativo some de carrinhos, order bumps e upsells novos.
   Prefira desativar a pedir para apagar: não existe exclusão.
+
+## Loja virtual: coleções e campos do produto
+
+Valem para a loja `ecommerce` (a página de checkout ignora). Mudam a loja virtual na próxima
+abertura, sem publicar de novo.
+
+- **Coleções** (até 100 por loja, abertas em `/colecao/<slug>`): agrupam produtos de categorias
+  diferentes, ex.: "Presentes", "Novidades", "Até R$ 99". `big_bang_list_collections`,
+  `big_bang_save_collection` (sem `collectionId` cria; com ele altera) e
+  `big_bang_delete_collection` (confirme antes; os produtos continuam no catálogo, mas menus e
+  seções que apontam para ela ficam sem destino; para só esconder, salve inativa).
+  - **Manual**: o lojista escolhe os produtos, na ordem da vitrine (até 500).
+  - **Automática**: entram os produtos ativos que atendem às regras (marcadores, categorias,
+    só em promoção, faixa de preço por moeda). Todas as regras enviadas precisam valer.
+  - Para aparecer na loja, ponha a coleção no menu ou numa seção da página inicial (skill
+    `criar-loja-virtual`, "Ajustar sem publicar de novo").
+- **Marcadores** (`tags`, até 30): filtram a loja e alimentam coleções automáticas.
+- **Ficha técnica** (`attributes`, até 20 pares nome e valor, traduzíveis): ex.: Material, Banho,
+  Pedra.
+- **Exibição das opções** (`optionDisplay`): por opção da variante, botões, lista ou amostras de
+  cor ou imagem.
+- **Foto da variante** (`imageIndex` na variante): posição, a partir de 0, da foto do produto que
+  aparece ao escolher a variante.
+- **Guia de medidas** (`sizeGuidePageSlug`): slug de uma página de conteúdo da loja (skill
+  `criar-loja-virtual`).
+- **SEO** (`seo`): título (até 70) e descrição (até 160) para o Google; sem eles, usa nome e
+  descrição.
+- **Personalização** (`customFields`, até 5 por produto, vale também no checkout): texto que o
+  comprador digita (até 60 caracteres, ex.: nome para gravar) ou escolha numa lista, obrigatório
+  ou não, com acréscimo opcional por unidade em cada moeda. Moeda sem acréscimo informado não vende
+  o item personalizado nela. O valor aparece no pedido, no painel e nos e-mails.
+
+`tags`, `attributes`, `optionDisplay` e `customFields`, quando enviados, substituem a lista
+(`[]` tira).
 
 Produto físico exige frete na loja; se não houver método de envio, ofereça `configurar-frete`.
 
@@ -99,6 +135,11 @@ a loja virtual. Produto inativo não entra no link.
 | `CURRENCY_NOT_ACCEPTED` | A loja não aceita a moeda: adicionar com `configurar-loja` ou tirar o preço. |
 | `DEFAULT_CURRENCY_PRICE_REQUIRED` | Incluir o preço na moeda padrão da loja. |
 | `CATEGORY_NOT_FOUND` | Listar as categorias e usar uma da mesma loja. |
+| `CATEGORY_LIMIT_REACHED` | A loja já tem 100 categorias: reaproveitar ou desativar uma. |
+| `CATEGORY_NESTING_INVALID` | Só há um nível: a mãe precisa ser do primeiro nível, e uma categoria com filhas não entra em outra. |
+| `COLLECTION_NOT_FOUND` | Listar as coleções e usar uma existente. |
+| `COLLECTION_LIMIT_REACHED` | A loja já tem 100 coleções: apagar ou reaproveitar uma. |
+| `COLLECTION_INVALID` | Ler a mensagem (produto que não é da loja, automática sem regra, preço mínimo acima do máximo) e ajustar. |
 | `SLUG_TAKEN` | Escolher outro endereço curto. |
 | `SKU_TAKEN` | O código já existe nesta loja. |
 | `COMPARE_AT_NOT_HIGHER` | O preço riscado precisa ser maior que o cobrado na mesma moeda. |

@@ -3,7 +3,7 @@ import {
   translator,
   useCheckout,
   useCheckoutForm,
-  type CartItem,
+  type BuyerCartItem,
   type CheckoutConfig,
   type CheckoutView,
   type Translate,
@@ -34,7 +34,7 @@ export function Checkout({
 }: {
   config: CheckoutConfig;
   /** Itens já escolhidos (carrinho da loja virtual); sem eles, valem o endereço ou o carrinho fixo. */
-  items?: CartItem[];
+  items?: BuyerCartItem[];
   /** Chamado uma vez quando o pedido é gerado. */
   onOrder?: (orderId: string) => void;
 }) {
@@ -73,7 +73,7 @@ function CheckoutSession({
   onOrder,
 }: {
   config: CheckoutConfig;
-  items: CartItem[];
+  items: BuyerCartItem[];
   onOrder?: (orderId: string) => void;
 }) {
   const c = useCheckout(config, items);

@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'preact/hooks';
 import { loadPolicy, StorefrontApiError } from '@bigbang/page-kit/storefront';
 import type {
-  PolicyKind,
+  StorePolicyKind,
   StorefrontPolicy,
 } from '@bigbang/page-kit/storefront';
 import type { Shop } from './shop';
 import { Loading, NotFound, Retry } from './states';
 
 /** Texto da política vindo da API, em texto simples (sem HTML). */
-export function Policy({ shop, kind }: { shop: Shop; kind: PolicyKind }) {
+export function Policy({ shop, kind }: { shop: Shop; kind: StorePolicyKind }) {
   const { config, view, t } = shop;
   const [policy, setPolicy] = useState<
-    StorefrontPolicy | 'missing' | 'error' | null
+    StorefrontPolicy<StorePolicyKind> | 'missing' | 'error' | null
   >(null);
   const [attempt, setAttempt] = useState(0);
 

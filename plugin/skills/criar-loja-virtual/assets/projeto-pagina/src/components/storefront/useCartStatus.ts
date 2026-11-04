@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import {
-  loadProduct,
-  StorefrontApiError,
-} from '@bigbang/page-kit/storefront';
+import { loadProduct, StorefrontApiError } from '@bigbang/page-kit/storefront';
 import {
   revalidateCart,
   type CartLineStatus,
@@ -19,7 +16,10 @@ export function useCartStatus(shop: Shop, attempt = 0): CartCheck {
   const { config, view, cart } = shop;
   const [check, setCheck] = useState<CartCheck>({ status: 'loading' });
   const key = cart.lines
-    .map((line) => `${line.productId}:${line.variantId ?? ''}:${line.quantity}`)
+    .map(
+      (line) =>
+        `${line.productId}:${line.variantId ?? ''}:${line.quantity}:${JSON.stringify(line.customization ?? {})}`,
+    )
     .join(',');
 
   useEffect(() => {

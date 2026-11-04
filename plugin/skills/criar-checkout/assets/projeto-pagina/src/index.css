@@ -1,1 +1,57 @@
 @import 'tailwindcss';
+
+/*
+ * Tema da loja virtual (specs/046): as cores, as fontes e o arredondamento vêm de
+ * `storefront.theme` na API e entram como variáveis --bb-* (ver components/storefront/theme.ts).
+ * Os valores abaixo são o padrão quando a loja não escolheu. As classes usam os nomes do tema:
+ * bg-primary, text-primary-fg, text-accent, text-muted, font-heading, rounded-theme.
+ */
+:root {
+  --bb-primary: #171717;
+  --bb-primary-text: #ffffff;
+  --bb-background: #ffffff;
+  --bb-text: #171717;
+  --bb-accent: #047857;
+  --bb-muted: #737373;
+  --bb-radius: 0.75rem;
+  --bb-font-heading: inherit;
+  --bb-font-body: ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-primary: var(--bb-primary);
+  --color-primary-fg: var(--bb-primary-text);
+  --color-page: var(--bb-background);
+  --color-ink: var(--bb-text);
+  --color-accent: var(--bb-accent);
+  --color-muted: var(--bb-muted);
+  --radius-theme: var(--bb-radius);
+  --font-heading: var(--bb-font-heading);
+  --font-body: var(--bb-font-body);
+}
+
+.bb-store {
+  background: var(--bb-background);
+  color: var(--bb-text);
+  font-family: var(--bb-font-body);
+}
+
+.bb-store h1,
+.bb-store h2,
+.bb-store h3 {
+  font-family: var(--bb-font-heading);
+}
+
+/* Seções e slots desenhados pelo kit (KitSection, KitSlot): espaço e títulos da página. */
+.bb-section-title {
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.bb-scroll-x {
+  scrollbar-width: none;
+}
+.bb-scroll-x::-webkit-scrollbar {
+  display: none;
+}

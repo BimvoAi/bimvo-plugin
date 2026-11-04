@@ -15,13 +15,14 @@ e funcionam em qualquer assistente que o suporte.
 |---|---|---|
 | `primeiros-passos` | Diagnostica a conta e leva até a primeira venda, fazendo só o que falta | **disponível** |
 | `criar-checkout` | Gera a página de checkout da loja `checkout` (o comprador chega pelo link do produto e paga), headless, publica no domínio do lojista e cuida das versões | **disponível** (features 002, 009 e 026) |
-| `criar-loja-virtual` | Gera a loja virtual completa da loja `ecommerce` (início, busca, categorias, produto, carrinho, checkout, pedido e políticas), headless, publica no domínio do lojista e cuida das versões | **disponível** (features 006, 009 e 026) |
-| `configurar-loja` | Cria e ajusta lojas, tipo, moedas, fuso, identificação do vendedor e políticas | **disponível** |
+| `criar-loja-virtual` | Gera a loja virtual completa da loja `ecommerce` (início, busca, categorias, coleções, produto, carrinho, checkout, pedido e políticas), headless, publica no domínio do lojista e cuida das versões; ajusta sem republicar tema, barra de anúncio, menus, seções da página inicial, blocos do produto, selos, recursos, SEO e páginas de conteúdo | **disponível** (features 006, 009 e 026) |
+| `configurar-loja` | Cria e ajusta lojas, tipo, moedas, fuso, identificação do vendedor, políticas (troca, privacidade, frete e termos), pixels e e-mails ao comprador | **disponível** |
 | `configurar-pagamentos` | Mostra os Recebimentos (Cloudfy Payments), conecta adquirentes (Mercado Pago, Pagar.me) e configura PIX, cartão, boleto, parcelas, juros, desconto e 3DS | **disponível** |
-| `gerenciar-produtos` | Catálogo com preço por moeda, físico ou digital | **disponível** |
+| `gerenciar-produtos` | Catálogo com preço por moeda, físico ou digital, categorias com foto e subcategoria, coleções, ficha técnica, amostras, foto por variante, SEO e personalização | **disponível** |
 | `configurar-frete` | Métodos de envio por país, estado e CEP, frete grátis | **disponível** |
 | `gerenciar-cupons` | Cupons percentuais, fixos e de frete grátis | **disponível** |
-| `gerenciar-ofertas` | Order bump e upsell | **disponível** |
+| `gerenciar-ofertas` | Order bump, upsell, promoções automáticas (compre 3 pague 2, desconto progressivo) e embalagem de presente | **disponível** |
+| `avaliacoes-e-contatos` | Modera, responde e importa avaliações de produto e lista os contatos da newsletter da loja virtual | **disponível** (feature 046) |
 | `consultar-pedidos` | Lista e abre pedidos, explica recusas | **disponível** |
 | `ver-metricas` | Faturamento, conversão, funil, rankings, por loja ou da conta | **disponível** |
 | `analisar-anuncios` | ROAS e CPA reais por campanha (Meta, TikTok, Google Ads) cruzando gasto com vendas pagas por UTM; pausa e orçamento com confirmação | **disponível** |

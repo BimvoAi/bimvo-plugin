@@ -1,9 +1,12 @@
 ---
 name: gerenciar-ofertas
-description: Cria, lista, ordena e ajusta ofertas de order bump (oferta marcada dentro do checkout, no mesmo pedido) e de upsell (oferta depois da compra, aceita com um clique) de uma loja da BimvoAI, com produtos que disparam a oferta, preço especial por moeda e prazo. Use quando o usuário disser /gerenciar-ofertas, "cria um order bump", "oferta no checkout", "upsell depois da compra", "one click", "quem comprar X ganha oferta de Y", "como estão meus order bumps".
+description: Cria, lista, ordena e ajusta ofertas de order bump (oferta marcada dentro do checkout, no mesmo pedido) e de upsell (oferta depois da compra, aceita com um clique) de uma loja da BimvoAI, com produtos que disparam a oferta, preço especial por moeda e prazo; promoções automáticas aplicadas no checkout sem cupom (compre 3 pague 2, desconto a partir de N itens ou de um valor) e a embalagem de presente. Use quando o usuário disser /gerenciar-ofertas, "cria um order bump", "oferta no checkout", "upsell depois da compra", "one click", "quem comprar X ganha oferta de Y", "como estão meus order bumps", "compre 3 pague 2", "leve mais pague menos", "desconto progressivo", "preço de atacado", "10% acima de R$ 300", "promoção automática", "embalagem de presente".
 ---
 
-# Order bump e upsell
+# Ofertas: order bump, upsell, promoções automáticas e presente
+
+Order bump e upsell estão logo abaixo; promoções automáticas e embalagem de presente, em seções
+próprias no fim.
 
 | | Order bump | Upsell |
 |---|---|---|
@@ -115,6 +118,42 @@ dados do comprador nem do pedido.
 - Para desempenho (exibições, aceites, taxa de aceite, valor gerado), use `ver-metricas` com o
   recorte de order bump ou upsell.
 
+## Promoções automáticas
+
+Desconto que o checkout aplica sozinho, sem código, quando o carrinho atinge a faixa. Aparece no
+checkout com o título público e, na loja virtual, nos cards, na página do produto e na seção de
+promoções da página inicial.
+
+| Tipo | Exemplo | Faixas |
+|---|---|---|
+| `quantity_pay` | Compre 3, pague 2 | leva N, paga M (ex.: 3→2, 6→4); os itens mais baratos saem de graça, repetível |
+| `quantity_percent` | 10% a partir de 5 itens (atacado) | a partir de N itens, X% |
+| `subtotal_percent` | 15% acima de R$ 300 | a partir de um valor por moeda, X%; moeda sem valor não recebe |
+
+- Vale a melhor faixa que o carrinho alcança, e só a melhor promoção do carrinho.
+- **Escopo**: a loja toda, ou só alguns produtos, categorias ou coleções. Só os itens do escopo
+  contam e recebem o desconto; order bump e upsell nunca entram.
+- **Com cupom**: por padrão não somam, e o comprador fica com o maior desconto entre cupom e
+  promoção. Somando (`combinesWithCoupons`), o cupom é calculado sobre o valor já com a promoção.
+- **Validade**: início e fim opcionais; sem fim, vale até pausar.
+- Percentual em pontos-base (10% = 1000) e valores na unidade mínima da moeda: converta e mostre
+  de volta formatado.
+
+Fluxo: `big_bang_list_automatic_discounts`; `big_bang_save_automatic_discount` cria (sem
+`automaticDiscountId`) ou **substitui por inteiro** (com ele: mande todos os campos, partindo do
+que a lista devolveu). Escreva o título público se o lojista não der e mostre nome, título,
+faixas, escopo e validade antes de salvar. Para pausar, salve com `active: false`; apagar é
+`big_bang_delete_automatic_discount`, depois de confirmar (pedidos feitos mantêm o desconto que
+tiveram). No painel: Ofertas › Promoções automáticas (`big_bang_abrir_minha_loja` com a seção
+`promotions`).
+
+## Embalagem de presente
+
+Opção que o comprador marca no checkout, com mensagem opcional (até 200 caracteres), cobrada como
+taxa à parte. Fica na loja: `big_bang_update_store` com `giftWrap` (ligada, preço por moeda na
+unidade mínima, `0` = grátis, e o texto da opção, traduzível). Moeda sem preço não oferece a
+embalagem. `null` desliga e apaga. No painel: Minha loja › Loja virtual › Embalagem de presente.
+
 ## Erros
 
 | Código | O que fazer |
@@ -124,3 +163,5 @@ dados do comprador nem do pedido.
 | `CURRENCY_NOT_ACCEPTED` | A loja não aceita a moeda do preço especial. |
 | `INVALID_ORDER_BUMP_RULE` / `INVALID_UPSELL_RULE` | Ler a mensagem (produto oferecido igual ao disparador, prazo fora da faixa etc.) e ajustar. |
 | `STORE_NOT_FOUND` | Listar lojas e escolher uma existente. |
+| `AUTOMATIC_DISCOUNT_NOT_FOUND` | Listar as promoções e usar uma existente. |
+| `INVALID_AUTOMATIC_DISCOUNT_RULE` | Ler a mensagem (limite de promoções da loja, categoria que não é da loja, fim antes do início) e ajustar. |

@@ -1,25 +1,34 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import type { PageConfig } from '@bigbang/page-kit/page';
-import { href, navigate, useRoute } from '@bigbang/page-kit/router';
+import { useRoute } from '@bigbang/page-kit/router';
 import { isStoreUnavailable } from '@bigbang/page-kit/page';
+import { KitSlot } from '@bigbang/page-kit/slots';
 import { loadStore, StorefrontApiError } from '@bigbang/page-kit/storefront';
 import { formatStoreMoney } from '@bigbang/page-kit/storefront';
 import type { StorefrontView } from '@bigbang/page-kit/storefront';
 import { OrderStatus } from '../order/OrderStatus';
 import { StoreUnavailable } from '../StoreUnavailable';
 import { ThankYou } from '../order/ThankYou';
+import { CookieBanner, NewsletterPopup, WhatsAppButton } from './Capture';
 import { Cart } from './Cart';
+import { CartDrawer } from './CartDrawer';
 import { Category } from './Category';
+import { Collection } from './Collection';
+import { ContentPage } from './ContentPage';
 import { storeText } from './copy';
 import { Footer } from './Footer';
+import { AnnouncementBar, Header } from './Header';
 import { Home } from './Home';
+import { OrderLookup } from './OrderLookup';
 import { Policy } from './Policy';
 import { Product } from './Product';
 import { Search } from './Search';
 import { checkoutLocale, type Shop } from './shop';
 import { NotFound, Retry } from './states';
 import { StoreCheckout } from './StoreCheckout';
+import { applyTheme } from './theme';
 import { useCart } from './useCart';
+import { Wishlist } from './Wishlist';
 
 type Loaded =
   | { status: 'loading' }
@@ -46,7 +55,8 @@ function writeChoice(name: 'locale' | 'currency', value: string | undefined) {
 
 /**
  * Loja virtual headless: lê a loja na API (idioma e moeda pela query) e monta as rotas de
- * contracts/page-routes.md. Nada de catálogo, preço ou política fica no código.
+ * contracts/page-routes.md. Nada de catálogo, preço ou política fica no código. Visual, menus,
+ * página inicial e recursos vêm de `storefront` (specs/046) e mudam sem publicar de novo.
  */
 export function StoreApp({ config }: { config: PageConfig }) {
   const route = useRoute();
@@ -65,6 +75,7 @@ export function StoreApp({ config }: { config: PageConfig }) {
         if (cancelled) return;
         setLoaded({ status: 'ready', view });
         document.documentElement.lang = view.locale;
+        applyTheme(view.storefront?.theme);
       })
       .catch((error: unknown) => {
         if (cancelled) return;
@@ -112,8 +123,13 @@ export function StoreApp({ config }: { config: PageConfig }) {
   }, [config, view, cart]);
 
   useEffect(() => {
-    if (view && route.name !== 'product' && route.name !== 'policy') {
-      document.title = view.name;
+    if (
+      view &&
+      !['product', 'policy', 'storePolicy', 'page', 'collection'].includes(
+        route.name,
+      )
+    ) {
+      document.title = view.storefront?.seo.title ?? view.name;
     }
   }, [view, route]);
 
@@ -149,81 +165,20 @@ export function StoreApp({ config }: { config: PageConfig }) {
   };
 
   return (
-    <div class="mx-auto flex min-h-screen max-w-6xl flex-col px-4">
-      <header class="flex flex-wrap items-center gap-4 border-b border-neutral-200 py-5">
-        <a
-          href={href('/')}
-          class="flex items-center gap-2 text-xl font-bold tracking-tight"
-        >
-          <img src="/brand/mark.svg" alt="" class="size-8" />
-          {view.name}
-        </a>
-        <form
-          class="order-last flex w-full gap-2 sm:order-none sm:w-auto sm:flex-1"
-          role="search"
-          onSubmit={(event) => {
-            event.preventDefault();
-            navigate(href('/busca', { query: { q: query.trim() } }));
-          }}
-        >
-          <input
-            type="search"
-            value={query}
-            placeholder={t('searchPlaceholder')}
-            aria-label={t('search')}
-            onInput={(event) => setQuery(event.currentTarget.value)}
-            class="w-full rounded-lg border border-neutral-300 px-3 py-2"
-          />
-          <button
-            type="submit"
-            class="rounded-lg bg-neutral-900 px-4 py-2 text-white"
-          >
-            {t('search')}
-          </button>
-        </form>
-        <div class="ml-auto flex items-center gap-3 text-sm">
-          {view.locales.length > 1 ? (
-            <select
-              aria-label={t('language')}
-              value={view.locale}
-              onChange={(event) => choose('locale', event.currentTarget.value)}
-              class="rounded border border-neutral-300 px-2 py-1"
-            >
-              {view.locales.map((item) => (
-                <option key={item.code} value={item.code}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          ) : null}
-          {view.currencies.length > 1 ? (
-            <select
-              aria-label={t('currency')}
-              value={view.currency}
-              onChange={(event) =>
-                choose('currency', event.currentTarget.value)
-              }
-              class="rounded border border-neutral-300 px-2 py-1"
-            >
-              {view.currencies.map((item) => (
-                <option key={item.code} value={item.code}>
-                  {item.code}
-                </option>
-              ))}
-            </select>
-          ) : null}
-          <a href={href('/carrinho')} class="font-medium">
-            {t('cart')} ({cart.count})
-          </a>
-        </div>
-      </header>
-      <main class="flex-1 py-8">
+    <div class="bb-store flex min-h-screen flex-col">
+      <KitSlot place="store.header" view={view} />
+      <AnnouncementBar shop={shop} />
+      <Header shop={shop} query={query} onQuery={setQuery} onChoose={choose} />
+      <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         {route.name === 'home' ? <Home shop={shop} /> : null}
         {route.name === 'search' ? (
           <Search shop={shop} query={route.query} />
         ) : null}
         {route.name === 'category' ? (
           <Category shop={shop} slug={route.slug} />
+        ) : null}
+        {route.name === 'collection' ? (
+          <Collection shop={shop} slug={route.slug} />
         ) : null}
         {route.name === 'product' ? (
           <Product shop={shop} productKey={route.key} />
@@ -244,12 +199,28 @@ export function StoreApp({ config }: { config: PageConfig }) {
             orderToken={route.token}
           />
         ) : null}
-        {route.name === 'policy' ? (
+        {route.name === 'policy' || route.name === 'storePolicy' ? (
           <Policy shop={shop} kind={route.kind} />
+        ) : null}
+        {route.name === 'page' ? (
+          <ContentPage shop={shop} slug={route.slug} />
+        ) : null}
+        {route.name === 'wishlist' ? <Wishlist shop={shop} /> : null}
+        {route.name === 'lookup' ? (
+          <OrderLookup shop={shop} mode="lookup" />
+        ) : null}
+        {route.name === 'account' ? (
+          <OrderLookup shop={shop} mode="account" />
         ) : null}
         {route.name === 'notFound' ? <NotFound t={t} /> : null}
       </main>
-      <Footer shop={shop} />
+      <div class="mx-auto w-full max-w-6xl px-4">
+        <Footer shop={shop} />
+      </div>
+      <CartDrawer shop={shop} />
+      <NewsletterPopup shop={shop} />
+      <WhatsAppButton shop={shop} />
+      <CookieBanner shop={shop} />
     </div>
   );
 }
