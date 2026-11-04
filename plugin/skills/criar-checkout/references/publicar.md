@@ -39,16 +39,21 @@ As versões são da loja: só se listam e se reutilizam dentro dela.
   conteúdo dela será substituído.
 - **Mudar uma página publicada sem o projeto na conversa** (conversa nova, outro computador): com
   `big_bang_restaurar_projeto_pagina`, traga o projeto da versão no ar (`pageName`) para uma
-  subpasta nova (`paginas/<nome>`), gere a prévia com o mesmo nome e siga o fluxo de sempre.
+  subpasta nova (`paginas/<nome>`), gere a prévia com o mesmo nome e siga o fluxo de sempre. Com
+  `big_bang_start_page_build`, prepare o projeto como em "1. Preparar o projeto" de
+  [montar-aqui.md](montar-aqui.md): ele parte da versão no ar, baixando o projeto dela quando a
+  pasta daqui não é dessa versão.
 - **Usar uma versão como base** ("faz uma nova baseada na versão 2, com fundo escuro"):
   - Com `big_bang_criar_projeto_pagina`, se o projeto da página ainda existe na conversa, trabalhe
     nele. Se não existe, traga-o com `big_bang_restaurar_projeto_pagina` (`versionId` da versão de
     base, numa subpasta nova `paginas/<nome>`), gere a prévia com o nome da página nova e siga. Se
     voltar `PROJECT_NOT_SAVED`, gere a página de novo pelo template com o que a pessoa pediu.
-  - Com `big_bang_start_page_build`, trabalhe na pasta `paginas/<nome>` da página, se ela existe
-    aqui; se não, monte de novo pelo template descrevendo a versão de base e o que mudar, como em
-    [montar-aqui.md](montar-aqui.md). Para reaproveitar a versão sem mudanças, publique-a em outra
-    página com `big_bang_publish_page_version`.
+  - Com `big_bang_start_page_build`, se a versão de base tem `hasProject`, baixe o projeto dela
+    para `paginas/<nome da página nova>` como em "Baixar o projeto da versão no ar" de
+    [montar-aqui.md](montar-aqui.md), trocando o `versionId` pelo da versão de base, e siga
+    "2. Personalizar". Sem projeto guardado (`PROJECT_NOT_SAVED`), monte de novo pelo template
+    descrevendo a versão de base e o que mudar. Para reaproveitar a versão sem mudanças, publique-a
+    em outra página com `big_bang_publish_page_version`.
 - **Origem de cada versão**: `big_bang_list_page_versions` traz `sourceVersion` (versão de que
   partiu) e `sourcePreset` (modelo do catálogo de que partiu, com `name`). Use o nome do modelo
   ao falar da versão ("a versão 1 veio do modelo Checkout Essencial").

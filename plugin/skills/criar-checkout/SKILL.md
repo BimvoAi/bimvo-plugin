@@ -1,6 +1,6 @@
 ---
 name: criar-checkout
-description: Cria e publica a página de checkout de uma loja do tipo checkout na BimvoAI - o comprador chega pelo link de um produto, vê o produto e paga - no domínio do lojista. Também atualiza o checkout já publicado, entrega o link de venda de cada produto e cuida das versões (listar, voltar a uma versão, publicar uma versão em outra página, usar como base, apagar). Use quando o usuário pedir /criar-checkout ou disser "cria meu checkout", "cria a página de checkout", "publica o checkout", "me passa o link do checkout", "volta o checkout para a versão 2", e também quando pedir landing page, página de captura ou link na bio numa loja checkout (a skill explica que a página é o checkout e oferece criá-lo). Para loja do tipo ecommerce, use a skill criar-loja-virtual.
+description: Cria e publica a página de checkout de uma loja do tipo checkout na BimvoAI - o comprador chega pelo link de um produto, vê o produto e paga - no domínio do lojista. Também atualiza o checkout já publicado, entrega o link de venda de cada produto e cuida das versões (listar, voltar a uma versão, publicar uma versão em outra página, usar como base, apagar). Use quando o usuário pedir /criar-checkout ou disser "cria meu checkout", "cria a página de checkout", "publica o checkout", "edita meu checkout", "muda o layout do checkout", "continua o checkout de onde parou", "me passa o link do checkout", "volta o checkout para a versão 2", e também quando pedir landing page, página de captura ou link na bio numa loja checkout (a skill explica que a página é o checkout e oferece criá-lo). Para loja do tipo ecommerce, use a skill criar-loja-virtual.
 ---
 
 # Criar e publicar a página de checkout
@@ -136,8 +136,9 @@ Com `big_bang_criar_projeto_pagina`, crie o projeto passando `storeId` e `kind: 
 altere esses dois. Deixe `products` vazio (cada produto é vendido pelo link), personalize a
 apresentação e chame `big_bang_gerar_previa_pagina`.
 
-Com `big_bang_start_page_build` e um terminal (sem `big_bang_criar_projeto_pagina`), crie o projeto
-e personalize a apresentação como em [references/montar-aqui.md](references/montar-aqui.md). Não
+Com `big_bang_start_page_build` e um terminal (sem `big_bang_criar_projeto_pagina`), prepare o projeto
+e personalize a apresentação como em [references/montar-aqui.md](references/montar-aqui.md). Página
+existente parte da versão no ar (a pasta daqui ou o projeto baixado dela), não do template. Não
 há prévia: descreva ao usuário o que vai mudar antes de publicar.
 
 

@@ -1,6 +1,6 @@
 ---
 name: criar-loja-virtual
-description: Cria e publica a loja virtual completa de uma loja do tipo ecommerce na BimvoAI - início, busca, categorias, página de produto, carrinho, checkout, acompanhamento do pedido e políticas - no domínio do lojista. Também atualiza a loja virtual já publicada, ajusta sem republicar o que é configuração da loja (cores, fontes, logo, barra de anúncio, menus, seções da página inicial, blocos da página de produto, selos, recursos como WhatsApp e popup de newsletter, SEO e páginas de conteúdo) e cuida das versões (listar, voltar a uma versão, publicar uma versão em outra página, usar como base, apagar). Use quando o usuário pedir /criar-loja-virtual ou disser "cria minha loja virtual", "cria minha loja online", "cria o site da loja", "publica a loja virtual", "volta a loja para a versão 2", "muda as cores da loja", "coloca uma barra de anúncio", "arruma o menu da loja", "troca o banner da página inicial", "cria a página quem somos", "liga o botão do WhatsApp", e também quando pedir landing page, página de captura ou link na bio numa loja ecommerce (a skill explica que a página é a loja virtual e oferece criá-la). Para loja do tipo checkout, use a skill criar-checkout.
+description: Cria e publica a loja virtual completa de uma loja do tipo ecommerce na BimvoAI - início, busca, categorias, página de produto, carrinho, checkout, acompanhamento do pedido e políticas - no domínio do lojista. Também atualiza a loja virtual já publicada, ajusta sem republicar o que é configuração da loja (cores, fontes, logo, barra de anúncio, menus, seções da página inicial, blocos da página de produto, selos, recursos como WhatsApp e popup de newsletter, SEO e páginas de conteúdo) e cuida das versões (listar, voltar a uma versão, publicar uma versão em outra página, usar como base, apagar). Use quando o usuário pedir /criar-loja-virtual ou disser "cria minha loja virtual", "cria minha loja online", "cria o site da loja", "publica a loja virtual", "edita minha loja virtual", "muda o layout da loja", "continua a loja de onde parou", "volta a loja para a versão 2", "muda as cores da loja", "coloca uma barra de anúncio", "arruma o menu da loja", "troca o banner da página inicial", "cria a página quem somos", "liga o botão do WhatsApp", e também quando pedir landing page, página de captura ou link na bio numa loja ecommerce (a skill explica que a página é a loja virtual e oferece criá-la). Para loja do tipo checkout, use a skill criar-checkout.
 ---
 
 # Criar e publicar a loja virtual
@@ -139,8 +139,9 @@ altere esses dois. Personalize a apresentação e chame `big_bang_gerar_previa_p
 roda em modo demonstração, com produtos de exemplo: avise o usuário que, publicada, a loja mostra
 o catálogo dele.
 
-Com `big_bang_start_page_build` e um terminal (sem `big_bang_criar_projeto_pagina`), crie o projeto
-e personalize a apresentação como em [references/montar-aqui.md](references/montar-aqui.md). Não
+Com `big_bang_start_page_build` e um terminal (sem `big_bang_criar_projeto_pagina`), prepare o projeto
+e personalize a apresentação como em [references/montar-aqui.md](references/montar-aqui.md). Página
+existente parte da versão no ar (a pasta daqui ou o projeto baixado dela), não do template. Não
 há prévia: descreva ao usuário o que vai mudar antes de publicar.
 
 
