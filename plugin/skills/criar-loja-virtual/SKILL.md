@@ -162,9 +162,10 @@ nem publicar versão. Para esses pedidos, numa loja virtual já publicada, siga
 [references/vitrine.md](references/vitrine.md) em vez dos Passos 3 a 5. Gere e publique de novo
 só quando o pedido muda o desenho da página (layout, componentes, textos de interface).
 
-Isso só vale para loja virtual montada com o template da versão 1.2.0 do plugin ou posterior.
-A versão no ar publicada antes de 04/11/2026 não lê essas configurações: elas ficam guardadas
-mas não aparecem até publicar uma versão nova. Veja "Loja montada antes da 1.2.0" em
+Isso só vale para loja virtual montada com um template que desenha a vitrine (plugin 1.2.0 ou
+posterior). A resposta de `big_bang_get_storefront` diz, em `livePages[].showsSettings`, se a
+versão no ar mostra essas configurações; quando não mostra, elas ficam guardadas e só aparecem
+depois de publicar uma versão nova. Veja "A versão no ar mostra as configurações?" em
 [references/vitrine.md](references/vitrine.md).
 
 ## Versões

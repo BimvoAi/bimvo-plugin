@@ -249,6 +249,13 @@ Problemas comuns:
   Code o carregaria também e o servidor `bimvo` apareceria em dobro.
 - Skill nova entra automaticamente no plugin; só falta
   incluí-la na tabela do topo deste arquivo.
+- As skills daqui são cópia de `skills/` do big-bang, que é a fonte: mude lá e copie para cá. O CI
+  (`.github/workflows/check.yml`, `node scripts/check-sync.mjs <pasta do big-bang>`) falha quando
+  uma skill difere da do big-bang ou quando as versões dos dois manifests divergem.
+- Retrocompatibilidade (`docs/retrocompatibilidade.md` no big-bang): publique o plugin depois do
+  deploy do big-bang que ele usa. A skill nova precisa funcionar também com servidor antigo (campo
+  novo recusado ou ausente na resposta) e o servidor segue aceitando skills antigas, porque o
+  lojista atualiza o plugin quando quiser.
 - O template de página que a `criar-checkout` e a `criar-loja-virtual` levam
   (`assets/projeto-pagina`) é cópia de `packages/core/page-template` do repo big-bang. Mudou o
   template? Rode `node skills/sync-page-template.mjs` no big-bang e copie as skills atualizadas

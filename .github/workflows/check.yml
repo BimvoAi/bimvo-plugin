@@ -1,0 +1,27 @@
+# Confere o plugin contra as skills do big-bang (a fonte) a cada push e PR.
+# Precisa do secret BIG_BANG_READ_TOKEN (token com leitura no repositório do big-bang). O
+# repositório e a branch vêm das variables BIG_BANG_REPO e BIG_BANG_REF; sem elas, o big-bang de
+# produção (main).
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.BIG_BANG_REPO || 'caionobrex/cloudfy-atom' }}
+          ref: ${{ vars.BIG_BANG_REF || 'main' }}
+          token: ${{ secrets.BIG_BANG_READ_TOKEN }}
+          path: big-bang
+          sparse-checkout: skills
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/check-sync.mjs big-bang

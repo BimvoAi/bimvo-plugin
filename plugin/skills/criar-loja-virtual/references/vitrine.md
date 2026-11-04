@@ -15,19 +15,30 @@ estas ferramentas em vez de mexer no projeto da página.
 | Parcela e PIX nos cards, favoritos, vistos recentemente, avaliações, avise-me, barra de frete grátis, WhatsApp, popup de newsletter (com cupom), aviso de cookies | `features` |
 | Título, descrição e imagem de compartilhamento da loja no Google e nas redes | `seo` |
 
-## Loja montada antes da 1.2.0
+## A versão no ar mostra as configurações?
 
-Só a loja virtual montada com o template da versão 1.2.0 do plugin (ou posterior) lê essas
-configurações. Antes de prometer que a mudança aparece sem publicar, confira a versão no ar com
-`big_bang_list_page_versions` (a de `live`):
+Só a loja virtual montada com um template que desenha a vitrine (plugin 1.2.0 ou posterior) lê
+essas configurações. Antes de prometer que a mudança aparece sem publicar, confira:
 
-- Publicada a partir de 04/11/2026: siga "Como alterar".
-- Publicada antes de 04/11/2026: só `seo` e as páginas de conteúdo aparecem. Cores, fontes, barra
-  de anúncio, menus, seções da página inicial, blocos do produto, selos e recursos ficam guardados
-  mas não mudam a loja até ela ganhar uma versão nova. Diga isso ao lojista antes de gravar,
-  grave o que ele pedir e ofereça publicar a versão nova: monte pelo template atual e publique
-  com o mesmo `pageName` (Passos 4 e 5 do `SKILL.md`), o que mantém o domínio. Avise que a página
-  é montada de novo e substitui a que está no ar.
+- `big_bang_get_storefront` (e `big_bang_update_storefront`) trazem `livePages`, uma linha por
+  página da loja virtual no ar, com `showsSettings`:
+  - `true`: siga "Como alterar";
+  - `false`: só `seo` e as páginas de conteúdo aparecem nessa página. Veja "Página que não mostra"
+    abaixo;
+  - `null`: não se sabe (publicada antes de o build registrar o template). Grave e diga ao lojista
+    que, se a mudança não aparecer, a página precisa de uma versão nova.
+  Quando vier `livePagesNotice`, ele já diz o que avisar.
+- Servidor sem `livePages` na resposta (anterior a ele): confira a versão no ar com
+  `big_bang_list_page_versions` (a de `live`). Publicada a partir de 04/11/2026 conta como `true`;
+  antes disso, como `false`.
+
+### Página que não mostra
+
+Cores, fontes, barra de anúncio, menus, seções da página inicial, blocos do produto, selos e
+recursos ficam guardados mas não mudam a loja até ela ganhar uma versão nova. Diga isso ao lojista
+antes de gravar, grave o que ele pedir e ofereça publicar a versão nova: monte pelo template atual
+e publique com o mesmo `pageName` (Passos 4 e 5 do `SKILL.md`), o que mantém o domínio. Avise que
+a página é montada de novo e substitui a que está no ar.
 
 ## Como alterar
 
