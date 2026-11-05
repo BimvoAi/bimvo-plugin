@@ -36,8 +36,10 @@ essas configurações. Antes de prometer que a mudança aparece sem publicar, co
 
 Cores, fontes, barra de anúncio, menus, seções da página inicial, blocos do produto, selos e
 recursos ficam guardados mas não mudam a loja até ela ganhar uma versão nova. Diga isso ao lojista
-antes de gravar, grave o que ele pedir e ofereça publicar a versão nova: monte pelo template atual
-e publique com o mesmo `pageName` (Passos 4 e 5 do `SKILL.md`), o que mantém o domínio. Avise que
+antes de gravar, grave o que ele pedir e ofereça levar a página para o template novo mantendo as
+personalizações, como em "Atualizar para o template novo" ([publicar.md](publicar.md)). Servidor
+sem `big_bang_upgrade_page_template`, ou atualização `unsupported`: monte pelo template atual e
+publique com o mesmo `pageName` (Passos 4 e 5 do `SKILL.md`), o que mantém o domínio, avisando que
 a página é montada de novo e substitui a que está no ar.
 
 ## Como alterar

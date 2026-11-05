@@ -91,11 +91,12 @@ publicado de outro computador, pela Cloudfy AI ou numa volta de versão.
    vence em 15 minutos: faça os passos seguintes em seguida.
 
    Com `templateNotice` na resposta, o projeto saiu de um template mais antigo que o da BimvoAI. A
-   publicação segue. Se a pasta do projeto veio de uma publicação anterior e o template desta
-   skill é mais novo (o `revision` de `assets/projeto-pagina/bigbang-template.json` é maior),
-   ofereça ao lojista montar de novo pelo template desta skill na próxima mudança. Se o template
-   desta skill também é antigo, diga ao lojista, numa frase, para atualizar o plugin da BimvoAI
-   (no Claude Code: `claude plugin update bimvo`).
+   publicação segue. Depois de publicar, ofereça a atualização para o template novo como em
+   "Atualizar para o template novo" de [publicar.md](publicar.md): ela mantém as personalizações
+   da página. Se o template desta skill também é antigo (o `revision` de
+   `assets/projeto-pagina/bigbang-template.json` é menor que `template.currentRevision`), diga ao
+   lojista, numa frase, para atualizar o plugin da BimvoAI (no Claude Code:
+   `claude plugin update bimvo`).
 3. Grave o `manifest` devolvido, como JSON, em `public/bigbang-page.json`.
 4. Empacote a raiz do projeto e envie com o método, o endereço e os cabeçalhos devolvidos:
 
@@ -124,7 +125,9 @@ publicado de outro computador, pela Cloudfy AI ou numa volta de versão.
 Para ajustar a página, prepare o projeto como em "1. Preparar o projeto" (a pasta daqui, se ela
 saiu da versão no ar, ou o projeto baixado dessa versão), mude só o que foi pedido e publique de
 novo com o mesmo `pageName`: a página é substituída e o domínio continua. Avise antes de
-substituir. O template só entra quando a versão no ar não guardou o projeto.
+substituir. O template só entra quando a versão no ar não guardou o projeto. Para levar à página
+os recursos de um template mais novo, siga "Atualizar para o template novo" de
+[publicar.md](publicar.md), em vez de montar de novo.
 
 ## Erros deste caminho
 

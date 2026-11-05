@@ -61,6 +61,46 @@ As versões são da loja: só se listam e se reutilizam dentro dela.
   desfaz, e chame `big_bang_delete_page_version` para cada uma. A versão no ar de uma página não
   pode ser apagada.
 
+## Atualizar para o template novo
+
+A página no ar guarda o projeto do template de que saiu; recursos novos do template (como o login
+de clientes) só chegam a ela com uma atualização. Ofereça quando `templateNotice` (de
+`big_bang_start_page_build`) ou `livePagesNotice` disserem que a página saiu de um template
+antigo, quando o lojista pedir um recurso novo do template, ou quando a versão no ar em
+`big_bang_list_page_versions` tiver `hasProject` e `templateRevision` menor que a atual (`null`
+conta como antiga).
+
+Servidor sem `big_bang_upgrade_page_template` é anterior a este recurso: ofereça montar de novo
+pelo template, avisando que o visual pode mudar e que a publicação substitui a que está no ar.
+Com ela:
+
+1. Diga em uma frase o que a página ganha e que as personalizações dela são mantidas. Com o ok,
+   chame `big_bang_upgrade_page_template` com `storeId`, `pageId` e `start: true`.
+2. Enquanto `upgrade.status` for `preparing`, chame de novo sem `start` a cada poucos segundos (leva
+   cerca de 1 minuto).
+3. `ready`: mostre o `previewUrl` (vale 2 horas e usa dados de demonstração, não os da loja), os
+   recursos novos (`newFeatures`) e o resumo de `changes` (arquivos atualizados, juntados com as
+   mudanças dele e mantidos). Publique com `big_bang_publish_page_template_upgrade` (`storeId`,
+   `pageId`, `upgradeId`) só depois que o lojista confirmar, e responda como em "Responder ao
+   usuário" com `publication`. A versão anterior continua guardada para voltar. `PAGE_CHANGED`: a
+   página ganhou outra versão depois da preparação; prepare de novo com `start: true`.
+4. `conflict`: as mudanças da página e o template novo mexem nas mesmas partes dos arquivos de
+   `conflicts`. Faça a atualização à mão:
+   - Com terminal (`big_bang_start_page_build`): baixe o projeto da versão no ar como em "Baixar o
+     projeto da versão no ar" de [montar-aqui.md](montar-aqui.md). O template novo é o
+     `assets/projeto-pagina/` desta skill: em cada arquivo de `conflicts`, leve para o projeto o
+     que o template mudou, mantendo o que o lojista mudou. Copie também do template o
+     `bigbang-template.json` e os arquivos que existem nele e faltam no projeto. Publique como em
+     "3. Publicar" de [montar-aqui.md](montar-aqui.md), com o mesmo `pageName`.
+   - Com `big_bang_criar_projeto_pagina`: traga o projeto da versão no ar com
+     `big_bang_restaurar_projeto_pagina` e crie à parte, numa subpasta nova, um projeto do template
+     com `big_bang_criar_projeto_pagina` para servir de template novo; faça o mesmo nos arquivos de
+     `conflicts` e publique como sempre.
+5. `unsupported`: o projeto saiu de um template antigo demais para atualizar sozinho. Siga como
+   num servidor sem a ferramenta (montar de novo pelo template, com o aviso).
+6. `failed`: diga em uma frase que a preparação não deu certo (use `message` se ajudar a
+   explicar) e ofereça tentar de novo com `start: true`.
+
 ## Domínio
 
 A página só abre no domínio do lojista; não há endereço da plataforma. Depois de publicar, com
@@ -88,6 +128,9 @@ A página só abre no domínio do lojista; não há endereço da plataforma. Dep
 | `PUBLICATION_IN_PROGRESS` | Outra publicação do mesmo nome está em andamento: esperar 1 minuto e repetir. |
 | `STORE_NOT_FOUND` | Listar as lojas de novo e escolher uma existente. |
 | `PROJECT_NOT_SAVED` | (com `big_bang_restaurar_projeto_pagina`) A versão foi publicada antes de a BimvoAI guardar o projeto: dizer isso em uma frase e oferecer criar a página de novo. |
+| `PAGE_CHANGED` | (atualização do template) A página ganhou outra versão depois da preparação: chamar `big_bang_upgrade_page_template` com `start: true` de novo. |
+| `UPGRADE_NOT_READY` | (atualização do template) A atualização não está pronta: consultar com `big_bang_upgrade_page_template` e seguir o `status`. |
+| `TEMPLATE_UPGRADE_NOT_NEEDED` | A versão no ar já está no template atual: nada a atualizar. |
 | `PAGE_VERSION_NOT_FOUND` | A versão não existe (ou foi apagada): listar as versões de novo e escolher outra. |
 | `PAGE_VERSION_OTHER_STORE` | A versão é de outra loja: versões só se reutilizam na própria loja. Escolher uma desta loja ou gerar a página. |
 | `PAGE_VERSION_UNAVAILABLE` | O pacote da versão não está mais guardado: escolher outra versão ou gerar a página de novo. |
