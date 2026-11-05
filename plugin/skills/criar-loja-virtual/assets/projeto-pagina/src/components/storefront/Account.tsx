@@ -3,6 +3,10 @@ import { shipmentStatusKey, translator } from '@bigbang/page-kit/checkout';
 import { fromE164Br, maskPhoneBr, toE164 } from '@bigbang/page-kit/forms';
 import { href, orderHref } from '@bigbang/page-kit/router';
 import {
+  accountOrderAction,
+  accountOrderPayHref,
+  buyAgain,
+  deleteAccount,
   formatStoreMoney,
   loadAccount,
   requestAccountCode,
@@ -270,11 +274,14 @@ function SignedIn({ shop, mode }: { shop: Shop; mode: 'lookup' | 'account' }) {
         <OrderList shop={shop} orders={page.orders} />
       </section>
       {mode === 'account' ? (
-        <Profile
-          shop={shop}
-          page={page}
-          onSaved={(account) => setPage({ ...page, account })}
-        />
+        <>
+          <Profile
+            shop={shop}
+            page={page}
+            onSaved={(account) => setPage({ ...page, account })}
+          />
+          <DeleteAccount shop={shop} />
+        </>
       ) : null}
     </div>
   );
@@ -297,6 +304,7 @@ function OrderList({
     <ul class="divide-y divide-neutral-200 rounded-theme border border-neutral-200">
       {orders.map((order) => {
         const status = STATUS[order.status];
+        const action = accountOrderAction(order);
         const decimals =
           view.currencies.find((item) => item.code === order.currency)
             ?.decimals ?? 2;
@@ -336,6 +344,25 @@ function OrderList({
                 {t('viewOrder')}
               </a>
             </div>
+            {action ? (
+              <button
+                type="button"
+                class={`mt-2 rounded-theme px-4 py-2 text-sm font-semibold ${
+                  action === 'buyAgain'
+                    ? 'border border-neutral-300'
+                    : 'bg-primary text-primary-fg'
+                }`}
+                onClick={() =>
+                  location.assign(
+                    action === 'buyAgain'
+                      ? buyAgain(shop.config.storeId, order)
+                      : accountOrderPayHref(order),
+                  )
+                }
+              >
+                {t(action === 'buyAgain' ? 'buyAgain' : 'payNow')}
+              </button>
+            ) : null}
           </li>
         );
       })}
@@ -429,5 +456,59 @@ function Profile({
         {state === 'busy' ? t('loading') : t('save')}
       </button>
     </form>
+  );
+}
+
+/** Excluir a conta (specs/049): pede confirmação; no sucesso a sessão sai e volta o login. */
+function DeleteAccount({ shop }: { shop: Shop }) {
+  const { t, config } = shop;
+  const [state, setState] = useState<'idle' | 'confirm' | 'busy' | 'error'>(
+    'idle',
+  );
+  if (state === 'idle') {
+    return (
+      <p class="border-t border-neutral-200 pt-6">
+        <button
+          type="button"
+          class="text-sm text-red-600 underline"
+          onClick={() => setState('confirm')}
+        >
+          {t('deleteAccount')}
+        </button>
+      </p>
+    );
+  }
+  return (
+    <section class="space-y-3 rounded-theme border border-red-200 p-4">
+      <h2 class="font-heading text-lg font-semibold">{t('deleteAccount')}</h2>
+      <p class="text-sm text-muted">{t('deleteAccountText')}</p>
+      {state === 'error' ? (
+        <p class="text-sm text-red-600" role="alert">
+          {t('sendError')}
+        </p>
+      ) : null}
+      <div class="flex flex-wrap gap-3">
+        <button
+          type="button"
+          disabled={state === 'busy'}
+          class="rounded-theme bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          onClick={() => {
+            setState('busy');
+            // A sessão apagada troca esta tela pelo login (useAccountSession).
+            deleteAccount(config).catch(() => setState('error'));
+          }}
+        >
+          {state === 'busy' ? t('loading') : t('deleteAccountConfirm')}
+        </button>
+        <button
+          type="button"
+          disabled={state === 'busy'}
+          class="text-sm underline"
+          onClick={() => setState('idle')}
+        >
+          {t('cancel')}
+        </button>
+      </div>
+    </section>
   );
 }
