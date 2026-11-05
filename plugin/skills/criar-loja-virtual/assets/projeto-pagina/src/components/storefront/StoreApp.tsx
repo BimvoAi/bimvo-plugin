@@ -9,6 +9,7 @@ import type { StorefrontView } from '@bigbang/page-kit/storefront';
 import { OrderStatus } from '../order/OrderStatus';
 import { StoreUnavailable } from '../StoreUnavailable';
 import { ThankYou } from '../order/ThankYou';
+import { Account } from './Account';
 import { CookieBanner, NewsletterPopup, WhatsAppButton } from './Capture';
 import { Cart } from './Cart';
 import { CartDrawer } from './CartDrawer';
@@ -19,7 +20,6 @@ import { storeText } from './copy';
 import { Footer } from './Footer';
 import { AnnouncementBar, Header } from './Header';
 import { Home } from './Home';
-import { OrderLookup } from './OrderLookup';
 import { Policy } from './Policy';
 import { Product } from './Product';
 import { Search } from './Search';
@@ -206,11 +206,8 @@ export function StoreApp({ config }: { config: PageConfig }) {
           <ContentPage shop={shop} slug={route.slug} />
         ) : null}
         {route.name === 'wishlist' ? <Wishlist shop={shop} /> : null}
-        {route.name === 'lookup' ? (
-          <OrderLookup shop={shop} mode="lookup" />
-        ) : null}
-        {route.name === 'account' ? (
-          <OrderLookup shop={shop} mode="account" />
+        {route.name === 'lookup' || route.name === 'account' ? (
+          <Account shop={shop} mode={route.name} />
         ) : null}
         {route.name === 'notFound' ? <NotFound t={t} /> : null}
       </main>

@@ -12,7 +12,7 @@ estas ferramentas em vez de mexer no projeto da página.
 | Página inicial: banners, categorias, vitrines de produtos, abas, grade de imagens, texto, faixa, depoimentos, selos, newsletter, vistos recentemente, promoções | `home` (seções na ordem do lojista) |
 | Blocos abaixo do botão de compra na página do produto e a ordem deles | `product` |
 | Selos de confiança (frete, troca, compra segura…) | `trustBadges` |
-| Parcela e PIX nos cards, favoritos, vistos recentemente, avaliações, avise-me, barra de frete grátis, WhatsApp, popup de newsletter (com cupom), aviso de cookies | `features` |
+| Parcela e PIX nos cards, favoritos, vistos recentemente, avaliações, avise-me, barra de frete grátis, WhatsApp, popup de newsletter (com cupom), aviso de cookies, conta do comprador com login por código (`customerAccounts`, ligada por padrão; a página só mostra com remetente de e-mail na loja) | `features` |
 | Título, descrição e imagem de compartilhamento da loja no Google e nas redes | `seo` |
 
 ## A versão no ar mostra as configurações?

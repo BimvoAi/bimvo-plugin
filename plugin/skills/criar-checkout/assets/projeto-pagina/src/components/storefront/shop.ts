@@ -62,7 +62,7 @@ export function linkProps(link: StorefrontLink): {
 
 /**
  * Recursos da vitrine. API anterior à 046 não manda `storefront`: valem os padrões da loja
- * virtual de antes (sem favoritos, avaliações nem captura).
+ * virtual de antes (sem favoritos, avaliações, captura nem conta do comprador).
  */
 export function features(view: StorefrontView): StorefrontFeatures {
   return (
@@ -77,6 +77,7 @@ export function features(view: StorefrontView): StorefrontFeatures {
       whatsapp: null,
       newsletterPopup: null,
       cookieBanner: null,
+      customerAccounts: false,
     }
   );
 }

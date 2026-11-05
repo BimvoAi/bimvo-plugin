@@ -10,6 +10,7 @@ import {
 } from 'lucide-preact';
 import { href, navigate } from '@bigbang/page-kit/router';
 import {
+  useAccountSession,
   useCartDrawer,
   useWishlist,
   type StorefrontMenuItem,
@@ -41,6 +42,15 @@ export function AnnouncementBar({ shop }: { shop: Shop }) {
       )}
     </div>
   );
+}
+
+/**
+ * Conta do comprador (specs/047): `null` sem o recurso (ícone e rótulo de antes), senão se há
+ * login nesta loja.
+ */
+function useSignedIn(shop: Shop): boolean | null {
+  const session = useAccountSession(shop.view.storeId);
+  return features(shop.view).customerAccounts ? Boolean(session) : null;
 }
 
 /** Itens do menu: o do painel ou, sem ele, as categorias de primeiro nível. */
@@ -85,6 +95,7 @@ export function Header({
   const drawer = useCartDrawer();
   const wishlist = useWishlist(view.storeId);
   const enabled = features(view);
+  const signedIn = useSignedIn(shop);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const items = menuItems(shop);
@@ -207,9 +218,12 @@ export function Header({
           <a
             href={href('/conta')}
             class={`${iconButton} hidden sm:flex`}
-            aria-label={t('account')}
+            aria-label={t(signedIn === false ? 'signIn' : 'account')}
           >
             <User class="size-5" aria-hidden="true" />
+            {signedIn ? (
+              <span class="absolute right-1.5 top-1.5 size-2.5 rounded-full border-2 border-page bg-primary" />
+            ) : null}
           </a>
           {enabled.wishlist ? (
             <a
@@ -268,6 +282,7 @@ function MobileMenu({
 }) {
   const { t } = shop;
   const [open, setOpen] = useState<number | null>(null);
+  const signedIn = useSignedIn(shop);
   return (
     <div
       class="fixed inset-0 z-50 bg-black/40 lg:hidden"
@@ -335,7 +350,7 @@ function MobileMenu({
           ))}
           <li>
             <a href={href('/conta')} onClick={onClose} class="block px-4 py-3">
-              {t('account')}
+              {t(signedIn === false ? 'signIn' : 'account')}
             </a>
           </li>
           <li>

@@ -31,11 +31,12 @@ Com `kind: 'ecommerce'`, `src/app.tsx` monta `<StoreApp config={config} />`
 | `/pedido/<id>#t=<token>` | Acompanhamento do pedido |
 | `/p/<slug>` | Páginas de conteúdo da loja (sobre, como comprar, guia de medidas) |
 | `/favoritos` | Lista de desejos (guardada no navegador) |
-| `/rastreio` e `/conta` | O comprador informa o e-mail e recebe os links dos pedidos (sem senha) |
+| `/conta` | Conta do comprador sem senha: e-mail, código de 6 dígitos no e-mail e consentimento de ofertas (desmarcado); logado, pedidos com status e rastreio, nome e telefone, sair. O checkout abre com e-mail, nome e telefone da conta. Loja sem `customerAccounts` (ou sem remetente de e-mail): o e-mail recebe os links dos pedidos |
+| `/rastreio` | Logado: a lista de pedidos da conta. Deslogado ou sem `customerAccounts`: o e-mail recebe os links dos pedidos, com o convite para entrar |
 | `/politicas/trocas`, `/politicas/privacidade`, `/politicas/frete` e `/politicas/termos` | Políticas da loja |
 
 Em todas: barra de anúncio, cabeçalho com logo, menu (com submenu), busca, idioma, moeda, conta,
-favoritos e carrinho em gaveta; rodapé com os grupos de links, páginas, políticas, newsletter,
+favoritos e carrinho em gaveta (o ícone da conta ganha um marcador com o comprador logado); rodapé com os grupos de links, páginas, políticas, newsletter,
 quem vende (nome ou razão social, CPF ou CNPJ, endereço) e contato; popup de newsletter, botão
 do WhatsApp e aviso de cookies quando a loja liga; estados de carregando, API fora do ar ("tentar
 de novo") e loja indisponível. Endereço de produto, categoria, coleção, página ou política que
@@ -48,7 +49,7 @@ query (`?locale=&currency=`) e acompanham os links internos.
 
 Cores, fontes, arredondamento, logo, ícone, barra de anúncio, menus, seções da página inicial,
 blocos da página de produto, selos e recursos (parcela e PIX nos cards, favoritos, vistos
-recentemente, avaliações, avise-me, frete grátis, WhatsApp, newsletter, cookies) são configurados
+recentemente, avaliações, avise-me, frete grátis, WhatsApp, newsletter, cookies, conta do comprador) são configurados
 pela loja (`big_bang_update_storefront` ou o painel) e chegam em `storefront` na leitura da loja:
 mudam sem publicar a página de novo. O tema entra como variáveis CSS `--bb-*` (`index.css`,
 `theme.ts`); as classes usam `bg-primary`, `text-primary-fg`, `text-accent`, `text-muted`,
