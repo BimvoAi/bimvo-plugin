@@ -3,16 +3,19 @@ import { shipmentStatusKey, translator } from '@bigbang/page-kit/checkout';
 import { fromE164Br, maskPhoneBr, toE164 } from '@bigbang/page-kit/forms';
 import { href, orderHref } from '@bigbang/page-kit/router';
 import {
+  accountCartFromServer,
   accountOrderAction,
   accountOrderPayHref,
   buyAgain,
   deleteAccount,
   formatStoreMoney,
   loadAccount,
+  readCart,
   requestAccountCode,
   signIn,
   signOut,
   StorefrontApiError,
+  syncAccountCart,
   updateAccount,
   useAccountSession,
   type AccountPage,
@@ -231,7 +234,12 @@ function SignedIn({ shop, mode }: { shop: Shop; mode: 'lookup' | 'account' }) {
     setFailed(false);
     // 401 apaga a sessão local e a tela volta ao login sozinha.
     loadAccount(config)
-      .then((loaded) => !cancelled && setPage(loaded))
+      .then((loaded) => {
+        if (cancelled) return;
+        // Carrinho da conta (specs/050): navegador vazio recebe o do servidor; com itens, vence.
+        accountCartFromServer(config, loaded);
+        setPage(loaded);
+      })
       .catch(() => !cancelled && setFailed(true));
     return () => {
       cancelled = true;
@@ -352,13 +360,16 @@ function OrderList({
                     ? 'border border-neutral-300'
                     : 'bg-primary text-primary-fg'
                 }`}
-                onClick={() =>
-                  location.assign(
-                    action === 'buyAgain'
-                      ? buyAgain(shop.config.storeId, order)
-                      : accountOrderPayHref(order),
-                  )
-                }
+                onClick={() => {
+                  if (action !== 'buyAgain') {
+                    location.assign(accountOrderPayHref(order));
+                    return;
+                  }
+                  const target = buyAgain(shop.config.storeId, order);
+                  // O carrinho novo vai para a conta na saída da página (pagehide).
+                  syncAccountCart(shop.config, readCart(shop.config.storeId));
+                  location.assign(target);
+                }}
               >
                 {t(action === 'buyAgain' ? 'buyAgain' : 'payNow')}
               </button>

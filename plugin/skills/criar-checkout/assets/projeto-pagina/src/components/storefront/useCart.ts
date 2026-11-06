@@ -1,17 +1,25 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import type { PageConfig } from '@bigbang/page-kit/page';
 import {
   addLine,
+  CART_EVENT,
+  cartKey,
   readCart,
   removeLine,
   setQuantity,
+  syncAccountCart,
   writeCart,
   type CartLine,
 } from '@bigbang/page-kit/storefront';
 import { addToCartEventId, trackPixel } from '@bigbang/page-kit/pixels';
 import type { CartApi } from './shop';
 
-/** Carrinho gravado no navegador; outra aba da mesma loja vê a mudança. */
-export function useCart(storeId: string): CartApi {
+/**
+ * Carrinho gravado no navegador; outra aba da mesma loja vê a mudança. Com o comprador logado,
+ * cada mudança também vai para a conta (specs/050).
+ */
+export function useCart(config: PageConfig): CartApi {
+  const { storeId } = config;
   const [lines, setLines] = useState<CartLine[]>(() => readCart(storeId));
 
   useEffect(() => {
@@ -20,8 +28,18 @@ export function useCart(storeId: string): CartApi {
         setLines(readCart(storeId));
       }
     };
+    // O kit gravou o carrinho nesta aba (o carrinho da conta, ao entrar).
+    const onLocal = (event: Event) => {
+      if ((event as CustomEvent<string>).detail === cartKey(storeId)) {
+        setLines(readCart(storeId));
+      }
+    };
     addEventListener('storage', onStorage);
-    return () => removeEventListener('storage', onStorage);
+    addEventListener(CART_EVENT, onLocal);
+    return () => {
+      removeEventListener('storage', onStorage);
+      removeEventListener(CART_EVENT, onLocal);
+    };
   }, [storeId]);
 
   const update = useCallback(
@@ -29,9 +47,10 @@ export function useCart(storeId: string): CartApi {
       setLines((current) => {
         const updated = next(current);
         writeCart(storeId, updated);
+        syncAccountCart(config, updated);
         return updated;
       }),
-    [storeId],
+    [storeId, config],
   );
 
   return useMemo(

@@ -60,7 +60,7 @@ function writeChoice(name: 'locale' | 'currency', value: string | undefined) {
  */
 export function StoreApp({ config }: { config: PageConfig }) {
   const route = useRoute();
-  const cart = useCart(config.storeId);
+  const cart = useCart(config);
   const [choice, setChoice] = useState(choiceFromUrl);
   const [loaded, setLoaded] = useState<Loaded>({ status: 'loading' });
   const [attempt, setAttempt] = useState(0);

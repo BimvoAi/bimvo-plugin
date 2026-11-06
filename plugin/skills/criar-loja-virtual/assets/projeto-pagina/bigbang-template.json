@@ -1,4 +1,9 @@
 {
-  "revision": 3,
-  "features": ["storefrontSettings", "customerAccounts", "accountOrderActions"]
+  "revision": 4,
+  "features": [
+    "storefrontSettings",
+    "customerAccounts",
+    "accountOrderActions",
+    "accountCart"
+  ]
 }
