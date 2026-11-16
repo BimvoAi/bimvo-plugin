@@ -18,8 +18,8 @@ a BimvoAI. Confira tudo primeiro e só pergunte ou peça ação do que estiver f
 - Antes de criar ou alterar algo, chame `big_bang_get_account_status` e veja `finance`
   (`status`, `access`, `openCents`, `readOnlyAt`, `blockedAt`, `financeUrl`). Com
   `access` diferente de `full`, não tente: avise como abaixo.
-- Erro `FEES_OVERDUE`: diga em uma frase que a conta está restrita porque há taxas de venda
-  vencidas, cite o valor em aberto, mostre o `financeUrl` do erro e não tente outra
+- Erro `FEES_OVERDUE`: diga em uma frase que a conta está restrita porque há taxas de venda ou
+  mensalidade do plano vencidas, cite o valor em aberto, mostre o `financeUrl` do erro e não tente outra
   ferramenta de escrita. As páginas e o checkout continuam vendendo.
 - Se uma ferramenta citada aqui não existir no servidor, diga que essa parte ainda não está
   liberada e siga para o próximo passo possível.
@@ -52,9 +52,9 @@ Mostre um checklist curto com o que está pronto (✅) e o que falta (⬜), nest
 - **Loja**: pergunte o nome da marca e se quer renomear a loja padrão
   (`big_bang_update_store`) ou criar outra (`big_bang_create_store`). Pergunte a moeda só se ele
   vender fora do Brasil (padrão BRL).
-- **Como receber**: a loja vende pela Cloudfy Payments (Recebimentos; sem taxa de checkout nas
-  vendas) ou por um adquirente próprio (Mercado Pago ou Pagar.me; com a taxa de checkout por
-  venda). Siga a skill `configurar-pagamentos`.
+- **Como receber**: a loja vende pela Cloudfy Payments (Recebimentos; sem taxa por venda em
+  nenhum plano) ou por um adquirente próprio (Mercado Pago ou Pagar.me; cada venda aprovada em
+  reais paga a taxa por venda do plano). Siga a skill `configurar-pagamentos`.
   - Recebimentos: quem cadastra e ativa é o lojista, no painel; você só lê o status. Em análise,
     ele segue montando a loja. Faltando algo do lado dele (verificação de identidade, cadastro
     recusado ou sem cadastro), peça para ele abrir Recebimentos no painel (no app,
@@ -95,6 +95,14 @@ Mostre um checklist curto com o que está pronto (✅) e o que falta (⬜), nest
   `big_bang_get_pixel_server_connect_link` com o `pixelId` e mostre o endereço, ou a seção Pixels
   em "Minha loja"; o token não entra nesta conversa e, sem ele, o pixel segue pelo navegador. Não
   republica a página para o pixel passar a valer.
+- **Plano** (não entra no checklist nem impede a venda): toda conta começa com 14 dias grátis. O
+  cartão fica no cadastro, nada é cobrado antes do 14º dia, a BimvoAI avisa 3 dias e 1 dia antes,
+  e quem não escolher segue no Essencial. Planos: Essencial R$ 197/mês + 2% por venda aprovada,
+  Pro R$ 597/mês + 1,5%, Escala R$ 1.497/mês + 1%; a taxa por venda só vale em adquirente próprio
+  (Cloudfy Payments e vendas em outra moeda não pagam). Se ele perguntar de preço ou plano, explique
+  em poucas frases e, para indicar um, pergunte quanto pretende faturar por mês por adquirente
+  próprio (regra na skill `copiloto-lucro`). Não insista nem empurre o plano mais caro: a escolha
+  e a troca ficam no Financeiro do painel (`financeUrl`).
 
 Depois de cada item, mostre o checklist atualizado em uma linha (ex.: "5 de 7 prontos"). Os
 pixels não entram nessa conta de venda: a loja vende sem eles.

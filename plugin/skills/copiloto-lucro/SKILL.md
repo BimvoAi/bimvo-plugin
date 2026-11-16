@@ -1,12 +1,13 @@
 ---
 name: copiloto-lucro
-description: Mostra o lucro real da loja (não o faturamento nem o ROAS) por período, produto, campanha e pedido, e propõe o que fazer quando algo dá prejuízo. Use quando o usuário disser /copiloto-lucro, "quanto eu lucrei", "qual produto dá prejuízo", "qual campanha dá lucro", "o que eu faço para lucrar mais", "meu lucro real".
+description: Mostra o lucro real da loja (não o faturamento nem o ROAS) por período, produto, campanha e pedido, propõe o que fazer quando algo dá prejuízo e indica o plano da BimvoAI mais barato para o faturamento. Use quando o usuário disser /copiloto-lucro, "quanto eu lucrei", "qual produto dá prejuízo", "qual campanha dá lucro", "o que eu faço para lucrar mais", "meu lucro real", "qual plano compensa", "vale a pena mudar de plano".
 ---
 
 # Copiloto de lucro
 
 O lucro real é o que sobrou: faturamento pago menos custo do produto, tarifa do recebimento,
-taxa de checkout da BimvoAI (só em venda por adquirente próprio; na Cloudfy Payments é zero),
+taxa por venda do plano da BimvoAI (só em venda aprovada em reais por adquirente próprio; na
+Cloudfy Payments e em outras moedas é zero),
 frete, imposto estimado, anúncio, reembolso e contestação. Quem calcula é o servidor, com regra
 fixa. Você explica e, se o lojista confirmar, chama a ferramenta de ação. Você não inventa número
 e o servidor não decide sozinho.
@@ -66,3 +67,32 @@ decimal ("500.00").
 
 Depois, uma tabela curta (produto ou campanha, faturamento, lucro, margem) e no máximo uma
 ação, com o que muda se a pessoa disser sim.
+
+## Qual plano compensa
+
+A BimvoAI cobra mensalidade mais taxa por venda aprovada. A mensalidade é custo fixo da conta, não
+de um pedido.
+
+| Plano | Mensalidade | Taxa por venda aprovada |
+|---|---|---|
+| Essencial | R$ 197/mês | 2% |
+| Pro | R$ 597/mês | 1,5% |
+| Escala | R$ 1.497/mês | 1% |
+
+- A taxa só incide sobre o faturamento aprovado **em reais por adquirente próprio** (Mercado Pago,
+  Pagar.me). Vendas pela Cloudfy Payments e em outras moedas não pagam taxa em nenhum plano.
+- Custo do mês = mensalidade + taxa × faturamento por adquirente próprio. Indique o menor:
+  - até R$ 80 mil/mês → Essencial;
+  - de R$ 80 mil a R$ 180 mil/mês → Pro;
+  - acima de R$ 180 mil/mês → Escala.
+  Nos limites (R$ 80 mil e R$ 180 mil) os dois planos empatam; indique o de menor mensalidade.
+- Use o faturamento real: some, nos últimos 30 dias, só o pago por adquirente próprio em BRL
+  (a skill `ver-metricas` separa por adquirente). Sem histórico, pergunte
+  quanto a pessoa pretende faturar por mês por adquirente próprio. Se tudo passa pela Cloudfy
+  Payments, a taxa é zero e o Essencial é o mais barato.
+- Mostre a conta, curta. Exemplo: "Com R$ 120 mil/mês no Mercado Pago: Essencial R$ 2.597, Pro
+  R$ 2.397, Escala R$ 2.697. O Pro sai R$ 200 mais barato."
+- Trocar: subir vale na hora, com cobrança proporcional dos dias que faltam no ciclo; descer vale
+  na próxima renovação. Contas novas têm 14 dias grátis e, sem escolha, seguem no Essencial.
+- Você indica, não troca: a escolha fica no Financeiro do painel (`financeUrl`). Não empurre plano
+  mais caro sem a conta mostrar que ele sai mais barato.

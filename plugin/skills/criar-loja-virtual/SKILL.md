@@ -48,8 +48,8 @@ reconectar a BimvoAI: monte aqui e publique.
 - Antes de criar ou alterar algo, chame `big_bang_get_account_status` e veja `finance`
   (`status`, `access`, `openCents`, `readOnlyAt`, `blockedAt`, `financeUrl`). Com
   `access` diferente de `full`, não tente: avise como abaixo.
-- Erro `FEES_OVERDUE`: diga em uma frase que a conta está restrita porque há taxas de venda
-  vencidas, cite o valor em aberto, mostre o `financeUrl` do erro e não tente outra
+- Erro `FEES_OVERDUE`: diga em uma frase que a conta está restrita porque há taxas de venda ou
+  mensalidade do plano vencidas, cite o valor em aberto, mostre o `financeUrl` do erro e não tente outra
   ferramenta de escrita. As páginas e o checkout continuam vendendo.
 - Fale com o usuário como descrito em "Como falar com o usuário", logo abaixo.
 

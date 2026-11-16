@@ -15,8 +15,8 @@ dele, e o visitante deixa o e-mail no popup, no rodapé ou numa seção da pági
 - Antes de alterar algo, chame `big_bang_get_account_status` e veja `finance`
   (`status`, `access`, `openCents`, `readOnlyAt`, `blockedAt`, `financeUrl`). Com
   `access` diferente de `full`, não tente: avise como abaixo.
-- Erro `FEES_OVERDUE`: diga em uma frase que a conta está restrita porque há taxas de venda
-  vencidas, cite o valor em aberto, mostre o `financeUrl` do erro e não tente outra
+- Erro `FEES_OVERDUE`: diga em uma frase que a conta está restrita porque há taxas de venda ou
+  mensalidade do plano vencidas, cite o valor em aberto, mostre o `financeUrl` do erro e não tente outra
   ferramenta de escrita. As páginas e o checkout continuam vendendo.
 - Se as ferramentas citadas não existirem no servidor, diga que avaliações e contatos ainda não
   estão liberados.

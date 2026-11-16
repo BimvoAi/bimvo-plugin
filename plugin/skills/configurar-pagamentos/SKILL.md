@@ -9,11 +9,15 @@ description: Mostra como a loja recebe (Recebimentos da Cloudfy Payments ou adqu
 
 - A loja pode receber de dois jeitos, e pode misturar os dois por meio e moeda:
   - **Cloudfy Payments** (`cloudfy_payments`): a conta de **Recebimentos** do lojista (uma por
-    conta, vale para todas as lojas). PIX e cartão, só em reais. **Sem taxa de checkout** nas vendas
-    processadas por ela.
+    conta, vale para todas as lojas). PIX e cartão, só em reais. **Sem taxa por venda** da
+    BimvoAI, em qualquer plano.
   - **Adquirente próprio** (Mercado Pago, Pagar.me): conectado por loja, com as chaves do painel
-    dele. PIX, cartão e boleto, conforme o adquirente. A BimvoAI cobra a **taxa de checkout** por
-    venda processada por ele.
+    dele. PIX, cartão e boleto, conforme o adquirente. Cada venda aprovada em reais por ele paga a
+    **taxa por venda do plano** (Essencial 2%, Pro 1,5%, Escala 1%). Venda em outra moeda não paga.
+- A BimvoAI cobra uma mensalidade mais a taxa por venda do plano: Essencial R$ 197/mês + 2%, Pro
+  R$ 597/mês + 1,5%, Escala R$ 1.497/mês + 1%. A mensalidade não depende de como a loja recebe;
+  a taxa por venda só existe no adquirente próprio. Para comparar planos, use a skill
+  `copiloto-lucro`; o plano se escolhe e se troca no Financeiro do painel (`financeUrl`).
 - Você **lê** o status dos Recebimentos, mas não cadastra, não vincula e não ativa: isso é do
   lojista, no painel da BimvoAI, em Recebimentos. No app da BimvoAI, chame
   `big_bang_abrir_minha_loja` com `payments`; fora dele, diga onde fica no painel.
@@ -26,8 +30,8 @@ description: Mostra como a loja recebe (Recebimentos da Cloudfy Payments ou adqu
 - Antes de criar ou alterar algo, chame `big_bang_get_account_status` e veja `finance`
   (`status`, `access`, `openCents`, `readOnlyAt`, `blockedAt`, `financeUrl`). Com
   `access` diferente de `full`, não tente: avise como abaixo.
-- Erro `FEES_OVERDUE`: diga em uma frase que a conta está restrita porque há taxas de venda
-  vencidas, cite o valor em aberto, mostre o `financeUrl` do erro e não tente outra
+- Erro `FEES_OVERDUE`: diga em uma frase que a conta está restrita porque há taxas de venda ou
+  mensalidade do plano vencidas, cite o valor em aberto, mostre o `financeUrl` do erro e não tente outra
   ferramenta de escrita. As páginas e o checkout continuam vendendo.
 - Se as ferramentas citadas não existirem no servidor, diga que pagamentos ainda não estão
   liberados e pare.
@@ -74,7 +78,9 @@ Para reconectar (situação `needs_reconnect`) o caminho é o mesmo.
 
 A Cloudfy Payments não se conecta por aqui: ela é ativada em Recebimentos (conectar ou
 desconectar devolve `ACQUIRER_MANAGED_BY_ACCOUNT`). Quando o lojista estiver escolhendo, vale
-dizer numa frase que vendas pela Cloudfy Payments não pagam a taxa de checkout da BimvoAI.
+dizer numa frase que vendas pela Cloudfy Payments não pagam a taxa por venda do plano (só a
+mensalidade), e que no adquirente próprio cada venda aprovada em reais paga de 1% a 2%, conforme o
+plano.
 
 ## Configurar meios
 
