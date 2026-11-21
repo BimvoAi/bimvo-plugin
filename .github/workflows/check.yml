@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
-          repository: ${{ vars.BIG_BANG_REPO || 'caionobrex/cloudfy-atom' }}
+          repository: ${{ vars.BIG_BANG_REPO || 'caionobrex/bimvoai' }}
           ref: ${{ vars.BIG_BANG_REF || 'main' }}
           token: ${{ secrets.BIG_BANG_READ_TOKEN }}
           path: big-bang
